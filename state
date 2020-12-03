@@ -1,0 +1,644 @@
+README.md: - avr-libc
+src/simulator/elements/processors/read_elf.c:		//	avr->frequency = f_cpu;
+src/simulator/elements/processors/read_elf.c://	hdump("flash", avr->flash, offset);
+src/gui/circuitwidget/components/mcu/avrcomponent.cpp:            avr->deleteLater();
+src/gui/editorwidget/inodebugger.cpp:    QString objdump = m_compilerPath+"hardware/tools/avr/bin/avr-objdump";
+src/gui/editorwidget/inodebugger.cpp:        QString command  = m_compilerPath+"hardware/tools/avr/bin/avr-addr2line -e "+ elfFileName+" "+addr;
+src/simavr/sim/avr_twi.c:        if( avr->data[p->r_twar] )  p->state |= TWI_COND_SLAVE;
+src/simavr/sim/avr_twi.c:                        avr_twi_irq_msg( TWI_COND_READ | TWI_COND_ACK, p->peer_addr, avr->data[p->r_twdr]));
+src/simavr/sim/avr_twi.c:                                   , avr->data[p->r_twdr]));
+src/simavr/sim/avr_twi.c:                                          , avr->data[p->r_twdr]));
+src/simavr/sim/avr_twi.c:                uint32_t irqMsg = avr_twi_irq_msg( msgv, p->peer_addr, avr->data[p->r_twdr]);
+src/simavr/sim/avr_twi.c:            p->peer_addr = avr->data[p->r_twdr];
+src/simavr/sim/avr_twi.c:    return avr->data[p->r_twdr];
+src/simavr/sim/avr_twi.c:            uint8_t mask = ~avr->data[p->r_twamr] >> 1;
+src/simavr/sim/avr_twi.c:            if( p->peer_addr == ((avr->data[p->r_twar] >> 1) & mask) ) // address match, we're talking
+src/simavr/sim/avr_twi.c:            if( avr->data[p->r_twar] & 1 )  { // TODO
+src/simavr/sim/avr_twi.c:            avr->data[p->r_twdr] = msg.u.twi.data;
+src/simavr/sim/avr_twi.c:            avr->data[p->r_twdr] = msg.u.twi.data;
+src/simavr/sim/sim_io.c:	avr_io_t * port = avr->io_port;
+src/simavr/sim/sim_io.c:	io->next = avr->io_port;
+src/simavr/sim/sim_io.c:	avr->io_port = io;
+src/simavr/sim/sim_io.c:	if (avr->io[a].r.param || avr->io[a].r.c) {
+src/simavr/sim/sim_io.c:		if (avr->io[a].r.param != param || avr->io[a].r.c != readp) {
+src/simavr/sim/sim_io.c:					avr->io[a].r.c, avr->io[a].r.param, readp, param);
+src/simavr/sim/sim_io.c:	avr->io[a].r.param = param;
+src/simavr/sim/sim_io.c:	avr->io[a].r.c = readp;
+src/simavr/sim/sim_io.c:	for (int i = 0; i < avr->io_shared_io[io].used; i++) {
+src/simavr/sim/sim_io.c:		avr_io_write_t c = avr->io_shared_io[io].io[i].c;
+src/simavr/sim/sim_io.c:			c(avr, addr, v, avr->io_shared_io[io].io[i].param);
+src/simavr/sim/sim_io.c:	if (avr->io[a].w.param || avr->io[a].w.c) {
+src/simavr/sim/sim_io.c:		if (avr->io[a].w.param != param || avr->io[a].w.c != writep) {
+src/simavr/sim/sim_io.c:			if (avr->io[a].w.c != _avr_io_mux_write) {
+src/simavr/sim/sim_io.c:				int no = avr->io_shared_io_count++;
+src/simavr/sim/sim_io.c:				if (avr->io_shared_io_count > ARRAY_SIZE(avr->io_shared_io)) {
+src/simavr/sim/sim_io.c:				avr->io_shared_io[no].used = 1;
+src/simavr/sim/sim_io.c:				avr->io_shared_io[no].io[0].param = avr->io[a].w.param;
+src/simavr/sim/sim_io.c:				avr->io_shared_io[no].io[0].c = avr->io[a].w.c;
+src/simavr/sim/sim_io.c:				avr->io[a].w.param = (void*)(intptr_t)no;
+src/simavr/sim/sim_io.c:				avr->io[a].w.c = _avr_io_mux_write;
+src/simavr/sim/sim_io.c:			int no = (intptr_t)avr->io[a].w.param;
+src/simavr/sim/sim_io.c:			int d = avr->io_shared_io[no].used++;
+src/simavr/sim/sim_io.c:			if (avr->io_shared_io[no].used > ARRAY_SIZE(avr->io_shared_io[0].io)) {
+src/simavr/sim/sim_io.c:			avr->io_shared_io[no].io[d].param = param;
+src/simavr/sim/sim_io.c:			avr->io_shared_io[no].io[d].c = writep;
+src/simavr/sim/sim_io.c:	avr->io[a].w.param = param;
+src/simavr/sim/sim_io.c:	avr->io[a].w.c = writep;
+src/simavr/sim/sim_io.c:	avr_io_t * port = avr->io_port;
+src/simavr/sim/sim_io.c:	if (avr->io[a].irq == NULL) {
+src/simavr/sim/sim_io.c:		avr->io[a].irq = avr_alloc_irq(&avr->irq_pool, 0, 9, namep);
+src/simavr/sim/sim_io.c:			avr->io[a].irq[i].flags |= IRQ_FLAG_FILTERED;
+src/simavr/sim/sim_io.c:		free((void*)avr->io[a].irq[index].name);
+src/simavr/sim/sim_io.c:		avr->io[a].irq[index].name = strdup(n);
+src/simavr/sim/sim_io.c:	return avr->io[a].irq + index;
+src/simavr/sim/sim_io.c://				strcpy(dst, io->avr->mmcu);
+src/simavr/sim/sim_io.c:        irqs = avr_alloc_irq(&io->avr->irq_pool, 0,
+src/simavr/sim/sim_io.c:	avr_io_t * port = avr->io_port;
+src/simavr/sim/sim_io.c:	avr->io_port = NULL;
+src/simavr/sim/sim_elf.c:    if (firmware->frequency) avr->frequency = firmware->frequency;
+src/simavr/sim/sim_elf.c:    if (firmware->vcc) avr->vcc = firmware->vcc;
+src/simavr/sim/sim_elf.c:    if (firmware->avcc) avr->avcc = firmware->avcc;
+src/simavr/sim/sim_elf.c:    if (firmware->aref) avr->aref = firmware->aref;
+src/simavr/sim/sim_elf.c:	avr->trace_data->codeline = malloc(scount * sizeof(avr_symbol_t*));
+src/simavr/sim/sim_elf.c:	memset(avr->trace_data->codeline, 0, scount * sizeof(avr_symbol_t*));
+src/simavr/sim/sim_elf.c:			avr->trace_data->codeline[firmware->symbol[i]->addr >> 1] =
+src/simavr/sim/sim_elf.c:		if (!avr->trace_data->codeline[i])
+src/simavr/sim/sim_elf.c:			avr->trace_data->codeline[i] = last;
+src/simavr/sim/sim_elf.c:			last = avr->trace_data->codeline[i];
+src/simavr/sim/sim_elf.c:	avr->codeend = firmware->flashsize +
+src/simavr/sim/sim_elf.c:    if (firmware->fuse) memcpy(avr->fuse, firmware->fuse, firmware->fusesize);
+src/simavr/sim/sim_elf.c:    if (firmware->lockbits) avr->lockbits = firmware->lockbits[0];
+src/simavr/sim/sim_elf.c:	avr->vcd = malloc(sizeof(*avr->vcd));
+src/simavr/sim/sim_elf.c:	memset(avr->vcd, 0, sizeof(*avr->vcd));
+src/simavr/sim/sim_elf.c:		avr->vcd,
+src/simavr/sim/sim_elf.c:    AVR_LOG(avr, LOG_TRACE, "Creating VCD trace file '%s'\n", avr->vcd->filename);
+src/simavr/sim/sim_elf.c:				avr_vcd_add_signal(avr->vcd, irq, 1,
+src/simavr/sim/sim_elf.c:				avr_vcd_add_signal(avr->vcd,
+src/simavr/sim/sim_elf.c:                avr_vcd_add_signal(avr->vcd, all, 8, firmware->trace[ti].name);
+src/simavr/sim/sim_elf.c:                        avr_vcd_add_signal(avr->vcd, bit, 1, firmware->trace[ti].name);
+src/simavr/sim/sim_elf.c:					avr_vcd_add_signal(avr->vcd,
+src/simavr/sim/sim_elf.c:    if (!firmware->command_register_addr) avr_vcd_start(avr->vcd);
+src/simavr/sim/sim_elf.c:		//	avr->frequency = f_cpu;
+src/simavr/sim/sim_elf.c://	hdump("flash", avr->flash, offset);
+src/simavr/sim/avr_flash.c:	avr_flashaddr_t z = avr->data[R_ZL] | (avr->data[R_ZH] << 8);
+src/simavr/sim/avr_flash.c:	if (avr->rampz)
+src/simavr/sim/avr_flash.c:		z |= avr->data[avr->rampz] << 16;
+src/simavr/sim/avr_flash.c:	uint16_t r01 = avr->data[0] | (avr->data[1] << 8);
+src/simavr/sim/avr_flash.c://	printf("AVR_IOCTL_FLASH_SPM %02x Z:%04x R01:%04x\n", avr->data[p->r_spm], z,r01);
+src/simavr/sim/avr_flash.c:				avr->flash[z++] = 0xff;
+src/simavr/sim/avr_flash.c:				avr->flash[z++] = p->tmppage[i];
+src/simavr/sim/avr_flash.c:				avr->flash[z++] = p->tmppage[i] >> 8;
+src/simavr/sim/avr_usb.c:	return p->io.avr->data[p->r_usbcon + uenum];
+src/simavr/sim/avr_usb.c:	avr->data[p->r_usbcon + ueint] |= 1 << ep;
+src/simavr/sim/avr_usb.c:	uint8_t * Rudien = &p->io.avr->data[p->r_usbcon + udien];
+src/simavr/sim/avr_usb.c:	uint8_t * Rudint = &p->io.avr->data[p->r_usbcon + udint];
+src/simavr/sim/avr_usb.c:	if(avr->data[addr]&1 && !(v&1))
+src/simavr/sim/avr_usb.c:		avr->data[p->r_usbcon + ueint] &= 0xff ^ (1 << ep); // mark ep0 interrupt
+src/simavr/sim/avr_usb.c:	if (avr->data[p->r_usbcon + udcon] & 1)
+src/simavr/sim/avr_usb.c:		p->io.avr->data[p->r_usbcon + i] = 0;
+src/simavr/sim/avr_usb.c:	p->io.avr->data[p->r_usbcon] = 0x20;
+src/simavr/sim/avr_usb.c:	p->io.avr->data[p->r_usbcon + udcon] = 1;
+src/simavr/sim/sim_avr.c:	avr->flash = malloc(avr->flashend + 1);
+src/simavr/sim/sim_avr.c:	memset(avr->flash, 0xff, avr->flashend + 1);
+src/simavr/sim/sim_avr.c:	avr->codeend = avr->flashend;
+src/simavr/sim/sim_avr.c:	avr->data = malloc(avr->ramend + 1);
+src/simavr/sim/sim_avr.c:	memset(avr->data, 0, avr->ramend + 1);
+src/simavr/sim/sim_avr.c:	avr->trace_data = calloc(1, sizeof(struct avr_trace_data_t));
+src/simavr/sim/sim_avr.c:	AVR_LOG(avr, LOG_TRACE, "%s init\n", avr->mmcu);
+src/simavr/sim/sim_avr.c:	avr->state = cpu_Limbo;
+src/simavr/sim/sim_avr.c:	avr->frequency = 1000000;	// can be overridden via avr_mcu_section
+src/simavr/sim/sim_avr.c:	if (avr->custom.init)
+src/simavr/sim/sim_avr.c:		avr->custom.init(avr, avr->custom.data);
+src/simavr/sim/sim_avr.c:	if (avr->init)
+src/simavr/sim/sim_avr.c:		avr->init(avr);
+src/simavr/sim/sim_avr.c:	avr->run = avr_callback_run_raw;
+src/simavr/sim/sim_avr.c:	avr->sleep = avr_callback_sleep_raw;
+src/simavr/sim/sim_avr.c:	avr->address_size = avr->eind ? 3 : 2;
+src/simavr/sim/sim_avr.c:	avr->log = 1;
+src/simavr/sim/sim_avr.c:	avr_regbit_set(avr, avr->reset_flags.porf);		// by  default set to power-on reset
+src/simavr/sim/sim_avr.c:	if (avr->custom.deinit)
+src/simavr/sim/sim_avr.c:		avr->custom.deinit(avr, avr->custom.data);
+src/simavr/sim/sim_avr.c:	if (avr->gdb) {
+src/simavr/sim/sim_avr.c:		avr->gdb = NULL;
+src/simavr/sim/sim_avr.c:	if (avr->vcd) {
+src/simavr/sim/sim_avr.c:		avr_vcd_close(avr->vcd);
+src/simavr/sim/sim_avr.c:		avr->vcd = NULL;
+src/simavr/sim/sim_avr.c:	if (avr->flash) free(avr->flash);
+src/simavr/sim/sim_avr.c:	if (avr->data) free(avr->data);
+src/simavr/sim/sim_avr.c:	if (avr->io_console_buffer.buf) {
+src/simavr/sim/sim_avr.c:		avr->io_console_buffer.len = 0;
+src/simavr/sim/sim_avr.c:		avr->io_console_buffer.size = 0;
+src/simavr/sim/sim_avr.c:		free(avr->io_console_buffer.buf);
+src/simavr/sim/sim_avr.c:		avr->io_console_buffer.buf = NULL;
+src/simavr/sim/sim_avr.c:	avr->flash = avr->data = NULL;
+src/simavr/sim/sim_avr.c:	AVR_LOG(avr, LOG_TRACE, "%s reset\n", avr->mmcu);
+src/simavr/sim/sim_avr.c:    avr->cyclesDone = 0;
+src/simavr/sim/sim_avr.c:	avr->state = cpu_Running;
+src/simavr/sim/sim_avr.c:	for(int i = 0x20; i <= avr->ioend; i++)
+src/simavr/sim/sim_avr.c:		avr->data[i] = 0;
+src/simavr/sim/sim_avr.c:	_avr_sp_set(avr, avr->ramend);
+src/simavr/sim/sim_avr.c:    avr->pc = avr->reset_pc;	// Likely to be zero
+src/simavr/sim/sim_avr.c:    for (int i = 0; i < 8; i++) avr->sreg[i] = 0;
+src/simavr/sim/sim_avr.c:    if (avr->reset) avr->reset(avr);
+src/simavr/sim/sim_avr.c:	avr_io_t * port = avr->io_port;
+src/simavr/sim/sim_avr.c:	avr->state = cpu_Stopped;
+src/simavr/sim/sim_avr.c:    if (avr->gdb_port)
+src/simavr/sim/sim_avr.c:        if (!avr->gdb) avr_gdb_init(avr);
+src/simavr/sim/sim_avr.c:    if (!avr->gdb) avr->state = cpu_Crashed;
+src/simavr/sim/sim_avr.c:    if (v == '\r' && avr->io_console_buffer.buf)
+src/simavr/sim/sim_avr.c:		avr->io_console_buffer.buf[avr->io_console_buffer.len] = 0;
+src/simavr/sim/sim_avr.c:			avr->io_console_buffer.buf);
+src/simavr/sim/sim_avr.c:		avr->io_console_buffer.len = 0;
+src/simavr/sim/sim_avr.c:    if (avr->io_console_buffer.len + 1 >= avr->io_console_buffer.size)
+src/simavr/sim/sim_avr.c:		avr->io_console_buffer.size += 128;
+src/simavr/sim/sim_avr.c:		avr->io_console_buffer.buf = (char*)realloc(
+src/simavr/sim/sim_avr.c:			avr->io_console_buffer.buf,
+src/simavr/sim/sim_avr.c:			avr->io_console_buffer.size);
+src/simavr/sim/sim_avr.c:    if (v >= ' ') avr->io_console_buffer.buf[avr->io_console_buffer.len++] = v;
+src/simavr/sim/sim_avr.c:	if ((address + size) > avr->flashend+1) {
+src/simavr/sim/sim_avr.c:			size, avr->flashend + 1);
+src/simavr/sim/sim_avr.c:	memcpy(avr->flash + address, code, size);
+src/simavr/sim/sim_avr.c:	avr->sleep_usec += avr_cycles_to_usec(avr, howLong);
+src/simavr/sim/sim_avr.c:	uint32_t usec = avr->sleep_usec;
+src/simavr/sim/sim_avr.c:		avr->sleep_usec = 0;
+src/simavr/sim/sim_avr.c:	avr_gdb_processor(avr, avr->state == cpu_Stopped);
+src/simavr/sim/sim_avr.c:    if (avr->state == cpu_Stopped) return ;
+src/simavr/sim/sim_avr.c:	int step = avr->state == cpu_Step;
+src/simavr/sim/sim_avr.c:    if (step) avr->state = cpu_Running;
+src/simavr/sim/sim_avr.c:	avr_flashaddr_t new_pc = avr->pc;
+src/simavr/sim/sim_avr.c:    if (avr->state == cpu_Running)
+src/simavr/sim/sim_avr.c:	avr->pc = new_pc;
+src/simavr/sim/sim_avr.c:    if (avr->state == cpu_Sleeping)
+src/simavr/sim/sim_avr.c:        if (!avr->sreg[S_I])
+src/simavr/sim/sim_avr.c:            if (avr->log) AVR_LOG(avr, LOG_TRACE, "simavr: sleeping with interrupts off, quitting gracefully\n");
+src/simavr/sim/sim_avr.c:			avr->state = cpu_Done;
+src/simavr/sim/sim_avr.c:		avr->sleep(avr, sleep);
+src/simavr/sim/sim_avr.c:		avr->cycle += 1 + sleep;
+src/simavr/sim/sim_avr.c:    if( avr->state == cpu_Running || avr->state == cpu_Sleeping ) avr_service_interrupts( avr );
+src/simavr/sim/sim_avr.c:    if( step ) avr->state = cpu_StepDone;
+src/simavr/sim/sim_avr.c:    if( avr->state == cpu_Done ) return;
+src/simavr/sim/sim_avr.c:    if( avr->state == cpu_Running )
+src/simavr/sim/sim_avr.c:        if( avr->cyclesDone > 1 ) avr->cyclesDone -= 1;
+src/simavr/sim/sim_avr.c:        else                      avr->pc  = avr_run_one( avr );
+src/simavr/sim/sim_avr.c:        avr->cycle += 1;
+src/simavr/sim/sim_avr.c:    if( avr->state == cpu_Sleeping )
+src/simavr/sim/sim_avr.c:        if( !avr->sreg[S_I] )
+src/simavr/sim/sim_avr.c:            if( avr->log) AVR_LOG(avr, LOG_TRACE, "simavr: sleeping with interrupts off, quitting gracefully\n");
+src/simavr/sim/sim_avr.c:            avr->state = cpu_Done;
+src/simavr/sim/sim_avr.c:        //avr->sleep(avr, sleep); //try to sleep for as long as we can( ?)
+src/simavr/sim/sim_avr.c:        avr->cycle += 1; // + sleep;
+src/simavr/sim/sim_avr.c:    if( avr->state == cpu_Running
+src/simavr/sim/sim_avr.c:     || avr->state == cpu_Sleeping ) // Interrupts might change the PC too, during 'sleep'
+src/simavr/sim/sim_avr.c:        if( avr->interrupt_state ) avr_service_interrupts( avr );
+src/simavr/sim/sim_avr.c:	avr->run(avr);
+src/simavr/sim/sim_avr.c:	return avr->state;
+src/simavr/sim/sim_avr.c:    AVR_LOG(avr, LOG_TRACE, "Starting %s - flashend %04x ramend %04x e2end %04x\n", avr->mmcu, avr->flashend, avr->ramend, avr->e2end);
+src/simavr/sim/sim_avr.c:	if (!avr || avr->log >= level) {
+src/simavr/sim/sim_cycle_timers.c:	avr_cycle_timer_pool_t * pool = &avr->cycle_timers;
+src/simavr/sim/sim_cycle_timers.c:	avr->run_cycle_count = 1;
+src/simavr/sim/sim_cycle_timers.c:	avr->run_cycle_limit = 1;
+src/simavr/sim/sim_cycle_timers.c:	avr_cycle_count_t run_cycle_count = ((avr->run_cycle_limit >= sleep_cycle_count) ?
+src/simavr/sim/sim_cycle_timers.c:		sleep_cycle_count : avr->run_cycle_limit);
+src/simavr/sim/sim_cycle_timers.c:	avr->run_cycle_count = run_cycle_count ? run_cycle_count : 1;
+src/simavr/sim/sim_cycle_timers.c:	avr_cycle_timer_pool_t * pool = &avr->cycle_timers;
+src/simavr/sim/sim_cycle_timers.c:        if(pool->timer->when > avr->cycle) sleep_cycle_count = pool->timer->when - avr->cycle;
+src/simavr/sim/sim_cycle_timers.c:	avr_cycle_timer_pool_t * pool = &avr->cycle_timers;
+src/simavr/sim/sim_cycle_timers.c:	when += avr->cycle;
+src/simavr/sim/sim_cycle_timers.c:	avr_cycle_timer_pool_t * pool = &avr->cycle_timers;
+src/simavr/sim/sim_cycle_timers.c:	avr_cycle_timer_pool_t * pool = &avr->cycle_timers;
+src/simavr/sim/sim_cycle_timers.c:	avr_cycle_timer_pool_t * pool = &avr->cycle_timers;
+src/simavr/sim/sim_cycle_timers.c:			return 1 + (t->when - avr->cycle);
+src/simavr/sim/sim_cycle_timers.c:	avr_cycle_timer_pool_t * pool = &avr->cycle_timers;
+src/simavr/sim/sim_cycle_timers.c:		if (when > avr->cycle)
+src/simavr/sim/sim_cycle_timers.c:			return avr_cycle_timer_return_sleep_run_cycles_limited(avr, when - avr->cycle);
+src/simavr/sim/sim_cycle_timers.c:		} while (when && when <= avr->cycle);
+src/simavr/sim/sim_cycle_timers.c:			avr_cycle_timer_insert(avr, when - avr->cycle, t->timer, t->param);
+src/simavr/sim/avr_spi.c:        if (avr->gdb) avr_gdb_handle_watchpoints(avr, addr, AVR_GDB_WATCH_WRITE);
+src/simavr/sim/avr_spi.c:    if (!avr_regbit_get(avr, p->mstr)) avr_raise_irq(p->io.irq + SPI_IRQ_OUTPUT, avr->data[p->r_spdr]);
+src/simavr/sim/sim_core.c:	if (avr->trace) {\
+src/simavr/sim/sim_core.c:		if (avr->trace_data->codeline && avr->trace_data->codeline[avr->pc>>1]) {\
+src/simavr/sim/sim_core.c:			const char * symn = avr->trace_data->codeline[avr->pc>>1]->symbol; \
+src/simavr/sim/sim_core.c:				printf("%04x: %-25s " _f, avr->pc, symn, ## args);\
+src/simavr/sim/sim_core.c:			printf("%s: %04x: " _f, __FUNCTION__, avr->pc, ## args);\
+src/simavr/sim/sim_core.c:#define SREG() if (avr->trace && donttrace == 0) {\
+src/simavr/sim/sim_core.c:	printf("%04x: \t\t\t\t\t\t\t\t\tSREG = ", avr->pc); \
+src/simavr/sim/sim_core.c:		printf("%c", avr->sreg[_sbi] ? toupper(_sreg_bit_name[_sbi]) : '.');\
+src/simavr/sim/sim_core.c:	printf("*** CYCLE %" PRI_avr_cycle_count "PC %04x\n", avr->cycle, avr->pc);
+src/simavr/sim/sim_core.c:		int pci = (avr->trace_data->old_pci + i) & 0xf;
+src/simavr/sim/sim_core.c:				avr->trace_data->old[pci].pc, avr->trace_data->codeline ? avr->trace_data->codeline[avr->trace_data->old[pci].pc>>1]->symbol : "unknown", OLD_PC_SIZE-i, avr->trace_data->old[pci].sp);
+src/simavr/sim/sim_core.c:	printf("Stack Ptr %04x/%04x = %d \n", _avr_sp_get(avr), avr->ramend, avr->ramend - _avr_sp_get(avr));
+src/simavr/sim/sim_core.c:	return(avr->flash[addr] | (avr->flash[addr + 1] << 8));
+src/simavr/sim/sim_core.c:	if (addr > avr->ramend) {
+src/simavr/sim/sim_core.c:				avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc), addr, v);
+src/simavr/sim/sim_core.c:				avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc), addr, v);
+src/simavr/sim/sim_core.c:	if (avr->trace_data->stack_frame_index > 1 && addr > avr->trace_data->stack_frame[avr->trace_data->stack_frame_index-2].sp) {
+src/simavr/sim/sim_core.c:				avr->pc, _avr_sp_get(avr), addr, v);
+src/simavr/sim/sim_core.c:	if (avr->gdb) {
+src/simavr/sim/sim_core.c:	avr->data[addr] = v;
+src/simavr/sim/sim_core.c:	if (addr > avr->ramend) {
+src/simavr/sim/sim_core.c:				avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc), addr, avr->ramend);
+src/simavr/sim/sim_core.c:	if (avr->gdb) {
+src/simavr/sim/sim_core.c:	return avr->data[addr];
+src/simavr/sim/sim_core.c:		avr->data[R_SREG] = v;
+src/simavr/sim/sim_core.c:		if (avr->io[io].w.c)
+src/simavr/sim/sim_core.c:			avr->io[io].w.c(avr, r, v, avr->io[io].w.param);
+src/simavr/sim/sim_core.c:			avr->data[r] = v;
+src/simavr/sim/sim_core.c:		if (avr->io[io].irq) {
+src/simavr/sim/sim_core.c:			avr_raise_irq(avr->io[io].irq + AVR_IOMEM_IRQ_ALL, v);
+src/simavr/sim/sim_core.c:				avr_raise_irq(avr->io[io].irq + i, (v >> i) & 1);
+src/simavr/sim/sim_core.c:		avr->data[r] = v;
+src/simavr/sim/sim_core.c:	return avr->data[R_SPL] | (avr->data[R_SPH] << 8);
+src/simavr/sim/sim_core.c:		READ_SREG_INTO(avr, avr->data[R_SREG]);
+src/simavr/sim/sim_core.c:		if (avr->io[io].r.c)
+src/simavr/sim/sim_core.c:			avr->data[addr] = avr->io[io].r.c(avr, addr, avr->io[io].r.param);
+src/simavr/sim/sim_core.c:		if (avr->io[io].irq) {
+src/simavr/sim/sim_core.c:			uint8_t v = avr->data[addr];
+src/simavr/sim/sim_core.c:			avr_raise_irq(avr->io[io].irq + AVR_IOMEM_IRQ_ALL, v);
+src/simavr/sim/sim_core.c:				avr_raise_irq(avr->io[io].irq + i, (v >> i) & 1);
+src/simavr/sim/sim_core.c:	for (int i = 0; i < avr->address_size; i++, addr >>= 8, sp--) {
+src/simavr/sim/sim_core.c:	return avr->address_size;
+src/simavr/sim/sim_core.c:	for (int i = 0; i < avr->address_size; i++, sp++) {
+src/simavr/sim/sim_core.c:			avr->pc, avr->trace_data->codeline[avr->pc>>1]->symbol, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc));
+src/simavr/sim/sim_core.c:			avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc));
+src/simavr/sim/sim_core.c:	if (!avr->trace || donttrace)
+src/simavr/sim/sim_core.c:		if (avr->trace_data->touched[r])
+src/simavr/sim/sim_core.c:			printf("%s=%02x ", avr_regname(i), avr->data[i]);
+src/simavr/sim/sim_core.c:		const uint8_t vd = avr->data[d];
+src/simavr/sim/sim_core.c:		const uint8_t vd = avr->data[d], vr = avr->data[r];
+src/simavr/sim/sim_core.c:		const uint8_t vr = avr->data[r];
+src/simavr/sim/sim_core.c:		const uint8_t vh = avr->data[h];
+src/simavr/sim/sim_core.c:		const uint16_t vp = avr->data[p] | (avr->data[p + 1] << 8);
+src/simavr/sim/sim_core.c:	avr->trace_data->old[avr->trace_data->old_pci].pc = avr->pc;\
+src/simavr/sim/sim_core.c:	avr->trace_data->old[avr->trace_data->old_pci].sp = _avr_sp_get(avr);\
+src/simavr/sim/sim_core.c:	avr->trace_data->old_pci = (avr->trace_data->old_pci + 1) & (OLD_PC_SIZE-1);\
+src/simavr/sim/sim_core.c:	avr->trace_data->stack_frame[avr->trace_data->stack_frame_index].pc = avr->pc;\
+src/simavr/sim/sim_core.c:	avr->trace_data->stack_frame[avr->trace_data->stack_frame_index].sp = _avr_sp_get(avr);\
+src/simavr/sim/sim_core.c:	avr->trace_data->stack_frame_index++;
+src/simavr/sim/sim_core.c:	if (avr->trace_data->stack_frame_index > 0) \
+src/simavr/sim/sim_core.c:		avr->trace_data->stack_frame_index--;
+src/simavr/sim/sim_core.c:	avr->sreg[S_Z] = res == 0;
+src/simavr/sim/sim_core.c:	avr->sreg[S_N] = (res >> 7) & 1;
+src/simavr/sim/sim_core.c:	avr->sreg[S_S] = avr->sreg[S_N] ^ avr->sreg[S_V];
+src/simavr/sim/sim_core.c:	avr->sreg[S_Z] = res == 0;
+src/simavr/sim/sim_core.c:	avr->sreg[S_N] = (res >> 15) & 1;
+src/simavr/sim/sim_core.c:	avr->sreg[S_S] = avr->sreg[S_N] ^ avr->sreg[S_V];
+src/simavr/sim/sim_core.c:	avr->sreg[S_H] = (add_carry >> 3) & 1;
+src/simavr/sim/sim_core.c:	avr->sreg[S_C] = (add_carry >> 7) & 1;
+src/simavr/sim/sim_core.c:	avr->sreg[S_V] = (((rd & rr & ~res) | (~rd & ~rr & res)) >> 7) & 1;
+src/simavr/sim/sim_core.c:	avr->sreg[S_H] = (sub_carry >> 3) & 1;
+src/simavr/sim/sim_core.c:	avr->sreg[S_C] = (sub_carry >> 7) & 1;
+src/simavr/sim/sim_core.c:	avr->sreg[S_V] = (((rd & ~rr & ~res) | (~rd & rr & res)) >> 7) & 1;
+src/simavr/sim/sim_core.c:		avr->sreg[S_Z] = 0;
+src/simavr/sim/sim_core.c:	avr->sreg[S_N] = (res >> 7) & 1;
+src/simavr/sim/sim_core.c:	avr->sreg[S_S] = avr->sreg[S_N] ^ avr->sreg[S_V];
+src/simavr/sim/sim_core.c:	avr->sreg[S_H] = (sub_carry >> 3) & 1;
+src/simavr/sim/sim_core.c:	avr->sreg[S_C] = (sub_carry >> 7) & 1;
+src/simavr/sim/sim_core.c:	avr->sreg[S_V] = (((rd & ~rr & ~res) | (~rd & rr & res)) >> 7) & 1;
+src/simavr/sim/sim_core.c:	avr->sreg[S_Z] = res == 0;
+src/simavr/sim/sim_core.c:	avr->sreg[S_C] = vr & 1;
+src/simavr/sim/sim_core.c:	avr->sreg[S_V] = avr->sreg[S_N] ^ avr->sreg[S_C];
+src/simavr/sim/sim_core.c:	avr->sreg[S_S] = avr->sreg[S_N] ^ avr->sreg[S_V];
+src/simavr/sim/sim_core.c:	avr->sreg[S_Z] = res == 0;
+src/simavr/sim/sim_core.c:	avr->sreg[S_C] = vr & 1;
+src/simavr/sim/sim_core.c:	avr->sreg[S_N] = res >> 7;
+src/simavr/sim/sim_core.c:	avr->sreg[S_V] = avr->sreg[S_N] ^ avr->sreg[S_C];
+src/simavr/sim/sim_core.c:	avr->sreg[S_S] = avr->sreg[S_N] ^ avr->sreg[S_V];
+src/simavr/sim/sim_core.c:	avr->sreg[S_V] = 0;
+src/simavr/sim/sim_core.c:    if( unlikely(avr->pc >= avr->flashend) )
+src/simavr/sim/sim_core.c:    uint32_t		opcode = _avr_flash_read16le(avr, avr->pc);
+src/simavr/sim/sim_core.c:    avr_flashaddr_t	new_pc = avr->pc + 2;	// future "default" pc
+src/simavr/sim/sim_core.c:							uint8_t res = vd - vr - avr->sreg[S_C];
+src/simavr/sim/sim_core.c:							uint8_t res = vd - vr - avr->sreg[S_C];
+src/simavr/sim/sim_core.c:							STATE("sbc %s[%02x], %s[%02x] = %02x\n", avr_regname(d), avr->data[d], avr_regname(r), avr->data[r], res);
+src/simavr/sim/sim_core.c:									STATE("movw %s:%s, %s:%s[%02x%02x]\n", avr_regname(d), avr_regname(d+1), avr_regname(r), avr_regname(r+1), avr->data[r+1], avr->data[r]);
+src/simavr/sim/sim_core.c:									uint16_t vr = avr->data[r] | (avr->data[r + 1] << 8);
+src/simavr/sim/sim_core.c:									int16_t res = ((int8_t)avr->data[r]) * ((int8_t)avr->data[d]);
+src/simavr/sim/sim_core.c:									STATE("muls %s[%d], %s[%02x] = %d\n", avr_regname(d), ((int8_t)avr->data[d]), avr_regname(r), ((int8_t)avr->data[r]), res);
+src/simavr/sim/sim_core.c:									avr->sreg[S_C] = (res >> 15) & 1;
+src/simavr/sim/sim_core.c:									avr->sreg[S_Z] = res == 0;
+src/simavr/sim/sim_core.c:											res = ((uint8_t)avr->data[r]) * ((int8_t)avr->data[d]);
+src/simavr/sim/sim_core.c:											res = ((uint8_t)avr->data[r]) * ((uint8_t)avr->data[d]);
+src/simavr/sim/sim_core.c:											res = ((int8_t)avr->data[r]) * ((int8_t)avr->data[d]);
+src/simavr/sim/sim_core.c:											res = ((uint8_t)avr->data[r]) * ((int8_t)avr->data[d]);
+src/simavr/sim/sim_core.c:									STATE("%s %s[%d], %s[%02x] = %d\n", name, avr_regname(d), ((int8_t)avr->data[d]), avr_regname(r), ((int8_t)avr->data[r]), res);
+src/simavr/sim/sim_core.c:									avr->sreg[S_C] = c;
+src/simavr/sim/sim_core.c:									avr->sreg[S_Z] = res == 0;
+src/simavr/sim/sim_core.c:					STATE("cpse %s[%02x], %s[%02x]\t; Will%s skip\n", avr_regname(d), avr->data[d], avr_regname(r), avr->data[r], res ? "":" not");
+src/simavr/sim/sim_core.c:					uint8_t res = vd + vr + avr->sreg[S_C];
+src/simavr/sim/sim_core.c:						STATE("rol %s[%02x] = %02x\n", avr_regname(d), avr->data[d], res);
+src/simavr/sim/sim_core.c:						STATE("addc %s[%02x], %s[%02x] = %02x\n", avr_regname(d), avr->data[d], avr_regname(r), avr->data[r], res);
+src/simavr/sim/sim_core.c:						STATE("tst %s[%02x]\n", avr_regname(d), avr->data[d]);
+src/simavr/sim/sim_core.c:						STATE("clr %s[%02x]\n", avr_regname(d), avr->data[d]);
+src/simavr/sim/sim_core.c:			uint8_t res = vh - k - avr->sreg[S_C];
+src/simavr/sim/sim_core.c:					uint16_t v = avr->data[R_ZL] | (avr->data[R_ZH] << 8);
+src/simavr/sim/sim_core.c:						STATE("st (Z+%d[%04x]), %s[%02x]\n", q, v+q, avr_regname(d), avr->data[d]);
+src/simavr/sim/sim_core.c:						_avr_set_ram(avr, v+q, avr->data[d]);
+src/simavr/sim/sim_core.c:						STATE("ld %s, (Z+%d[%04x])=[%02x]\n", avr_regname(d), q, v+q, avr->data[v+q]);
+src/simavr/sim/sim_core.c:					uint16_t v = avr->data[R_YL] | (avr->data[R_YH] << 8);
+src/simavr/sim/sim_core.c:						STATE("st (Y+%d[%04x]), %s[%02x]\n", q, v+q, avr_regname(d), avr->data[d]);
+src/simavr/sim/sim_core.c:						_avr_set_ram(avr, v+q, avr->data[d]);
+src/simavr/sim/sim_core.c:						STATE("ld %s, (Y+%d[%04x])=[%02x]\n", avr_regname(d), q, v+q, avr->data[d+q]);
+src/simavr/sim/sim_core.c:					if (!avr_has_pending_interrupts(avr) || !avr->sreg[S_I])
+src/simavr/sim/sim_core.c:						avr->state = cpu_Sleeping;
+src/simavr/sim/sim_core.c:					if (avr->gdb) {
+src/simavr/sim/sim_core.c:						avr->state = cpu_StepDone;
+src/simavr/sim/sim_core.c:						new_pc = avr->pc;
+src/simavr/sim/sim_core.c:					if (e && !avr->eind)
+src/simavr/sim/sim_core.c:					uint32_t z = avr->data[R_ZL] | (avr->data[R_ZH] << 8);
+src/simavr/sim/sim_core.c:						z |= avr->data[avr->eind] << 16;
+src/simavr/sim/sim_core.c:					cycle += 1 + avr->address_size;
+src/simavr/sim/sim_core.c:					uint16_t z = avr->data[R_ZL] | (avr->data[R_ZH] << 8);
+src/simavr/sim/sim_core.c:					_avr_set_r(avr, 0, avr->flash[z]);
+src/simavr/sim/sim_core.c:					if (!avr->rampz)
+src/simavr/sim/sim_core.c:					uint32_t z = avr->data[R_ZL] | (avr->data[R_ZH] << 8) | (avr->data[avr->rampz] << 16);
+src/simavr/sim/sim_core.c:					_avr_set_r(avr, 0, avr->flash[z]);
+src/simavr/sim/sim_core.c:							STATE("lds %s[%02x], 0x%04x\n", avr_regname(d), avr->data[d], x);
+src/simavr/sim/sim_core.c:							uint16_t z = avr->data[R_ZL] | (avr->data[R_ZH] << 8);
+src/simavr/sim/sim_core.c:							_avr_set_r(avr, d, avr->flash[z]);
+src/simavr/sim/sim_core.c:							if (!avr->rampz)
+src/simavr/sim/sim_core.c:							uint32_t z = avr->data[R_ZL] | (avr->data[R_ZH] << 8) | (avr->data[avr->rampz] << 16);
+src/simavr/sim/sim_core.c:							_avr_set_r(avr, d, avr->flash[z]);
+src/simavr/sim/sim_core.c:								_avr_set_r(avr, avr->rampz, z >> 16);
+src/simavr/sim/sim_core.c:							uint16_t x = (avr->data[R_XH] << 8) | avr->data[R_XL];
+src/simavr/sim/sim_core.c:							uint16_t x = (avr->data[R_XH] << 8) | avr->data[R_XL];
+src/simavr/sim/sim_core.c:							uint16_t y = (avr->data[R_YH] << 8) | avr->data[R_YL];
+src/simavr/sim/sim_core.c:							uint16_t y = (avr->data[R_YH] << 8) | avr->data[R_YL];
+src/simavr/sim/sim_core.c:							uint16_t z = (avr->data[R_ZH] << 8) | avr->data[R_ZL];
+src/simavr/sim/sim_core.c:							uint16_t z = (avr->data[R_ZH] << 8) | avr->data[R_ZL];
+src/simavr/sim/sim_core.c:							STATE("pop %s (@%04x)[%02x]\n", avr_regname(d), sp, avr->data[sp]);
+src/simavr/sim/sim_core.c:							avr->sreg[S_C] = 1;
+src/simavr/sim/sim_core.c:							avr->sreg[S_H] = ((res >> 3) | (vd >> 3)) & 1;
+src/simavr/sim/sim_core.c:							avr->sreg[S_V] = res == 0x80;
+src/simavr/sim/sim_core.c:							avr->sreg[S_C] = res != 0;
+src/simavr/sim/sim_core.c:							avr->sreg[S_V] = res == 0x80;
+src/simavr/sim/sim_core.c:							avr->sreg[S_N] = 0;
+src/simavr/sim/sim_core.c:							uint8_t res = (avr->sreg[S_C] ? 0x80 : 0) | vd >> 1;
+src/simavr/sim/sim_core.c:							avr->sreg[S_V] = res == 0x7f;
+src/simavr/sim/sim_core.c:									avr->sreg[S_V] = ((~vp & res) >> 15) & 1;
+src/simavr/sim/sim_core.c:									avr->sreg[S_C] = ((~res & vp) >> 15) & 1;
+src/simavr/sim/sim_core.c:									avr->sreg[S_V] = ((vp & ~res) >> 15) & 1;
+src/simavr/sim/sim_core.c:									avr->sreg[S_C] = ((res & ~vp) >> 15) & 1;
+src/simavr/sim/sim_core.c:									STATE("cbi %s[%04x], 0x%02x = %02x\n", avr_regname(io), avr->data[io], mask, res);
+src/simavr/sim/sim_core.c:									STATE("sbic %s[%04x], 0x%02x\t; Will%s branch\n", avr_regname(io), avr->data[io], mask, !res?"":" not");
+src/simavr/sim/sim_core.c:									STATE("sbi %s[%04x], 0x%02x = %02x\n", avr_regname(io), avr->data[io], mask, res);
+src/simavr/sim/sim_core.c:									STATE("sbis %s[%04x], 0x%02x\t; Will%s branch\n", avr_regname(io), avr->data[io], mask, res?"":" not");
+src/simavr/sim/sim_core.c:											avr->sreg[S_Z] = res == 0;
+src/simavr/sim/sim_core.c:											avr->sreg[S_C] = (res >> 15) & 1;
+src/simavr/sim/sim_core.c:					STATE("out %s, %s[%02x]\n", avr_regname(A), avr_regname(d), avr->data[d]);
+src/simavr/sim/sim_core.c:					_avr_set_ram(avr, A, avr->data[d]);
+src/simavr/sim/sim_core.c:					STATE("in %s, %s[%02x]\n", avr_regname(d), avr_regname(A), avr->data[A]);
+src/simavr/sim/sim_core.c:			new_pc = (new_pc + o) % (avr->flashend+1);
+src/simavr/sim/sim_core.c:			new_pc = (new_pc + o) % (avr->flashend+1);
+src/simavr/sim/sim_core.c:					int branch = (avr->sreg[s] && set) || (!avr->sreg[s] && !set);
+src/simavr/sim/sim_core.c:					uint8_t v = (vd & ~mask) | (avr->sreg[S_T] ? mask : 0);
+src/simavr/sim/sim_core.c:					avr->sreg[S_T] = (vd >> s) & 1;
+src/simavr/sim/sim_core.c:    avr->cyclesDone = cycle;
+src/simavr/sim/sim_core.c:    ////avr->cycle += cycle;
+src/simavr/sim/sim_core.c:    /*if( (avr->state == cpu_Running)
+src/simavr/sim/sim_core.c:     && (avr->run_cycle_count > cycle)
+src/simavr/sim/sim_core.c:     && (avr->interrupt_state == 0))
+src/simavr/sim/sim_core.c:        avr->run_cycle_count -= cycle;
+src/simavr/sim/sim_core.c:        avr->pc = new_pc;
+src/simavr/sim/avr_adc.c:			if ( !avr->vcc) {
+src/simavr/sim/avr_adc.c:				reg = avr->vcc / 4;
+src/simavr/sim/avr_adc.c:			if (!avr->vcc)
+src/simavr/sim/avr_adc.c:				vref = avr->vcc;
+src/simavr/sim/avr_adc.c:			if (!avr->aref)
+src/simavr/sim/avr_adc.c:				vref = avr->aref;
+src/simavr/sim/avr_adc.c:			if (!avr->avcc)
+src/simavr/sim/avr_adc.c:				vref = avr->avcc;
+src/simavr/sim/avr_adc.c:	avr->data[p->r_adcl] = reg;
+src/simavr/sim/avr_adc.c:	avr->data[p->r_adch] = reg >> 8;
+src/simavr/sim/avr_adc.c:	avr->data[p->adsc.reg] = v;
+src/simavr/sim/avr_adc.c:		v = avr->data[p->adsc.reg];
+src/simavr/sim/avr_adc.c:		AVR_LOG(avr, LOG_TRACE, "ADC: Start AREF %d AVCC %d\n", avr->aref, avr->avcc);
+src/simavr/sim/avr_adc.c:		v = avr->data[p->adsc.reg];	// Peter Ross pross@xvid.org
+src/simavr/sim/avr_adc.c:		div = avr->frequency >> div;
+src/simavr/sim/avr_adc.c:                    uint8_t val = avr->data[addr] | (1 << p->adsc.bit);
+src/simavr/sim/avr_uart.c:		avr->data[addr] = 0;
+src/simavr/sim/avr_uart.c:				((avr->cycle-p->rxc_raise_time)/p->rx_cnt < p->cycles_per_byte)) {
+src/simavr/sim/avr_uart.c:	avr->data[addr] = v;
+src/simavr/sim/avr_uart.c:	uint32_t val = avr->data[p->r_ubrrl] | (avr->data[p->r_ubrrh] << 8);
+src/simavr/sim/avr_uart.c:	double baud = ((double)avr->frequency) / cycles_per_bit; // can be less than 1
+src/simavr/sim/avr_uart.c:	if (avr->gdb) {
+src/simavr/sim/sim_core.h:				for (int i = 0; i < 32; i++) printf("%s=%02x%c", avr_regname(i), avr->data[i],i==15?'\n':' ');\
+src/simavr/sim/sim_core.h:				uint16_t y = avr->data[R_YL] | (avr->data[R_YH]<<8);\
+src/simavr/sim/sim_core.h:				for (int i = 0; i < 20; i++) printf("Y+%02d=%02x ", i, avr->data[y+i]);\
+src/simavr/sim/sim_core.h:		for (int i = avr->trace_data->stack_frame_index; i; i--) {\
+src/simavr/sim/sim_core.h:					avr->trace_data->stack_frame[pci].pc, \
+src/simavr/sim/sim_core.h:					avr->trace_data->codeline ? avr->trace_data->codeline[avr->trace_data->stack_frame[pci].pc>>1]->symbol : "unknown", \
+src/simavr/sim/sim_core.h:							avr->trace_data->stack_frame[pci].sp);\
+src/simavr/sim/sim_core.h: * Reconstructs the SREG value from avr->sreg into dst.
+src/simavr/sim/sim_core.h:				if (avr->sreg[i] > 1) { \
+src/simavr/sim/sim_core.h:				} else if (avr->sreg[i]) \
+src/simavr/sim/sim_core.h:			if (!avr->sreg[S_I])
+src/simavr/sim/sim_core.h:				avr->interrupt_state = -2;
+src/simavr/sim/sim_core.h:			avr->interrupt_state = 0;
+src/simavr/sim/sim_core.h:	avr->sreg[flag] = ival;
+src/simavr/sim/sim_core.h: * Splits the SREG value from src into the avr->sreg array.
+src/simavr/sim/avr_ioport.c:	uint8_t ddr = avr->data[p->r_ddr];
+src/simavr/sim/avr_ioport.c:	uint8_t v = (avr->data[p->r_pin] & ~ddr) | (avr->data[p->r_port] & ddr);
+src/simavr/sim/avr_ioport.c:	avr->data[addr] = v;
+src/simavr/sim/avr_ioport.c:	D(if (avr->data[addr] != v) printf("** PIN%c(%02x) = %02x\r\n", p->name, addr, v);)
+src/simavr/sim/avr_ioport.c:	uint8_t ddr = avr->data[p->r_ddr];
+src/simavr/sim/avr_ioport.c:			avr_raise_irq(p->io.irq + i, (avr->data[p->r_port] >> i) & 1);
+src/simavr/sim/avr_ioport.c:			else if ((avr->data[p->r_port] >> i) & 1)
+src/simavr/sim/avr_ioport.c:	uint8_t pin = (avr->data[p->r_pin] & ~ddr) | (avr->data[p->r_port] & ddr);
+src/simavr/sim/avr_ioport.c:	if (avr->io[port_io].irq) {
+src/simavr/sim/avr_ioport.c:		avr_raise_irq(avr->io[port_io].irq + AVR_IOMEM_IRQ_ALL, avr->data[p->r_port]);
+src/simavr/sim/avr_ioport.c:			avr_raise_irq(avr->io[port_io].irq + i, (avr->data[p->r_port] >> i) & 1);
+src/simavr/sim/avr_ioport.c:	D(if (avr->data[addr] != v) printf("** PORT%c(%02x) = %02x\r\n", p->name, addr, v);)
+src/simavr/sim/avr_ioport.c:	avr_ioport_write(avr, p->r_port, avr->data[p->r_port] ^ v, param);
+src/simavr/sim/avr_ioport.c:	D(if (avr->data[addr] != v) printf("** DDR%c(%02x) = %02x\r\n", p->name, addr, v);)
+src/simavr/sim/avr_ioport.c:		if ((v & mask) != (avr->data[addr] & mask)) {
+src/simavr/sim/avr_ioport.c:	avr->data[p->r_pin] &= ~mask;
+src/simavr/sim/avr_ioport.c:		avr->data[p->r_pin] |= mask;
+src/simavr/sim/avr_ioport.c:	uint32_t prev_val = avr->data[p->r_pin] & mask;
+src/simavr/sim/avr_ioport.c:	avr->data[p->r_pin] &= ~mask;
+src/simavr/sim/avr_ioport.c:		avr->data[p->r_pin] |= mask;
+src/simavr/sim/avr_ioport.c:	uint8_t ddr = avr->data[p->r_ddr];
+src/simavr/sim/avr_ioport.c:		avr_ioport_write(avr, p->r_port, (avr->data[p->r_port] & ~mask) | (value ? mask : 0), p);
+src/simavr/sim/avr_ioport.c:	uint32_t new_val = avr->data[p->r_pin] & mask;
+src/simavr/sim/avr_ioport.c:		int raise = avr->data[p->r_pcint] & mask;
+src/simavr/sim/avr_ioport.c:					.port = avr->data[p->r_port],
+src/simavr/sim/avr_ioport.c:					.ddr = avr->data[p->r_ddr],
+src/simavr/sim/avr_ioport.c:					.pin = avr->data[p->r_pin],
+src/simavr/sim/avr_ioport.c:		printf("skipping PORT%c for core %s\n", p->name, avr->mmcu);
+src/simavr/sim/avr_eeprom.c:		ee_addr = avr->data[p->r_eearl] | (avr->data[p->r_eearh] << 8);
+src/simavr/sim/avr_eeprom.c:		ee_addr = avr->data[p->r_eearl];
+src/simavr/sim/avr_eeprom.c:				avr->pc);
+src/simavr/sim/avr_eeprom.c:		//	printf("eeprom write %04x <- %02x\n", addr, avr->data[p->r_eedr]);
+src/simavr/sim/avr_eeprom.c:		p->eeprom[ee_addr] = avr->data[p->r_eedr];
+src/simavr/sim/avr_eeprom.c:		avr->data[p->r_eedr] = p->eeprom[ee_addr];
+src/simavr/sim/avr_lin.c:	uint32_t lbrr = (avr->data[p->r_linbrrh] << 8) | avr->data[p->r_linbrrl];
+src/simavr/sim/avr_lin.c:	//uint32_t baud = avr->frequency / (lbt * (lbrr + 1));
+src/simavr/sim/avr_lin.c:	double baud = ((double)avr->frequency) / cycles_per_bit; // can be less than 1
+src/simavr/sim/avr_lin.c:	avr->data[p->r_linbtr] = 0x20;
+src/simavr/cores/sim_mega128rfr2.c: * Temporary hack for mangled avr-libc headers
+src/simavr/sim/sim_regbit.h:	avr_core_watch_write(avr, a, avr->data[a] | m);
+src/simavr/sim/sim_regbit.h:	return (avr->data[a] >> rb.bit) & rb.mask;
+src/simavr/sim/sim_regbit.h:	avr_core_watch_write(avr, a, (avr->data[a] & ~(m)) | ((v << rb.bit) & m));
+src/simavr/sim/sim_regbit.h:	return (avr->data[a] >> rb.bit) & rb.mask;
+src/simavr/sim/sim_regbit.h:	avr_core_watch_write(avr, a, (avr->data[a] & ~(m)) | ((v) & m));
+src/simavr/sim/sim_regbit.h:	return (avr->data[a]) & (rb.mask << rb.bit);
+src/simavr/sim/sim_regbit.h:	return (avr->data[a] >> rb.bit) & rb.mask;
+src/simavr/sim/sim_regbit.h:	return (avr->data[a]) & (rb.mask << rb.bit);
+src/simavr/sim/sim_regbit.h:	avr_core_watch_write(avr, a, avr->data[a] & ~m);
+src/simavr/sim/sim_regbit.h:	return avr->data[a];
+src/simavr/sim/sim_regbit.h:		res |= ((avr->data[a] >> rb->bit) & rb->mask) << i;
+src/simavr/sim/avr_extint.c:	if (avr->sreg[S_I]) {
+src/simavr/sim/avr_extint.c:		if (avr->sreg[S_I]) {
+src/simavr/sim/avr_extint.c:	avr_io_t * periferal = avr->io_port;
+src/simavr/sim/avr_extint.c:	masked_v |= (avr->data[addr] & ~v) & mask;
+src/simavr/sim/avr_extint.c:	int changed = avr->data[addr] != v;
+src/simavr/sim/avr_extint.c:	int changed = avr->data[addr] != v;
+src/simavr/sim/sim_gdb.c:		signal ? signal : 5, g->avr->data[R_SREG],
+src/simavr/sim/sim_gdb.c:		g->avr->data[R_SPL], g->avr->data[R_SPH],
+src/simavr/sim/sim_gdb.c:		g->avr->pc & 0xff, (g->avr->pc>>8)&0xff, (g->avr->pc>>16)&0xff);
+src/simavr/sim/sim_gdb.c:			g->avr->data[regi] = *src;
+src/simavr/sim/sim_gdb.c:			g->avr->data[R_SREG] = *src;
+src/simavr/sim/sim_gdb.c:			g->avr->data[R_SPL] = src[0];
+src/simavr/sim/sim_gdb.c:			g->avr->data[R_SPH] = src[1];
+src/simavr/sim/sim_gdb.c:			g->avr->pc = src[0] | (src[1] << 8) | (src[2] << 16) | (src[3] << 24);
+src/simavr/sim/sim_gdb.c:			sprintf(rep, "%02x", g->avr->data[regi]);
+src/simavr/sim/sim_gdb.c:			sprintf(rep, "%02x%02x", g->avr->data[R_SPL], g->avr->data[R_SPH]);
+src/simavr/sim/sim_gdb.c:				g->avr->pc & 0xff, (g->avr->pc>>8)&0xff, (g->avr->pc>>16)&0xff);
+src/simavr/sim/sim_gdb.c:						g->avr->ramend + 1, g->avr->flashend + 1);
+src/simavr/sim/sim_gdb.c:			if (addr < avr->flashend) {
+src/simavr/sim/sim_gdb.c:				src = avr->flash + addr;
+src/simavr/sim/sim_gdb.c:			} else if (addr >= 0x800000 && (addr - 0x800000) <= avr->ramend) {
+src/simavr/sim/sim_gdb.c:				src = avr->data + addr - 0x800000;
+src/simavr/sim/sim_gdb.c:			} else if (addr == (0x800000 + avr->ramend + 1) && len == 2) {
+src/simavr/sim/sim_gdb.c:			} else if (addr >= 0x810000 && (addr - 0x810000) <= avr->e2end) {
+src/simavr/sim/sim_gdb.c:						addr, len, avr->ramend+1);
+src/simavr/sim/sim_gdb.c:				read_hex_string(start + 1, avr->flash + addr, strlen(start+1));
+src/simavr/sim/sim_gdb.c:			} else if (addr >= 0x800000 && (addr - 0x800000) <= avr->ramend) {
+src/simavr/sim/sim_gdb.c:				read_hex_string(start + 1, avr->data + addr - 0x800000, strlen(start+1));
+src/simavr/sim/sim_gdb.c:			} else if (addr >= 0x810000 && (addr - 0x810000) <= avr->e2end) {
+src/simavr/sim/sim_gdb.c:			avr->state = cpu_Running;
+src/simavr/sim/sim_gdb.c:			avr->state = cpu_Step;
+src/simavr/sim/sim_gdb.c:			avr->state = cpu_StepDone;
+src/simavr/sim/sim_gdb.c:					if (addr > avr->flashend ||
+src/simavr/sim/sim_gdb.c:					if (addr > avr->ramend ||
+src/simavr/sim/sim_gdb.c:		g->avr->state = cpu_Stopped;
+src/simavr/sim/sim_gdb.c:			g->avr->state = cpu_Running;	// resume
+src/simavr/sim/sim_gdb.c:			g->avr->state = cpu_StepDone;
+src/simavr/sim/sim_gdb.c:	avr_gdb_t *g = avr->gdb;
+src/simavr/sim/sim_gdb.c:				5, g->avr->data[R_SREG],
+src/simavr/sim/sim_gdb.c:				g->avr->data[R_SPL], g->avr->data[R_SPH],
+src/simavr/sim/sim_gdb.c:				g->avr->pc & 0xff, (g->avr->pc>>8)&0xff, (g->avr->pc>>16)&0xff,
+src/simavr/sim/sim_gdb.c:		avr->state = cpu_Stopped;
+src/simavr/sim/sim_gdb.c:	if (!avr || !avr->gdb)
+src/simavr/sim/sim_gdb.c:	avr_gdb_t * g = avr->gdb;
+src/simavr/sim/sim_gdb.c:	if (avr->state == cpu_Running &&
+src/simavr/sim/sim_gdb.c:			gdb_watch_find(&g->breakpoints, avr->pc) != -1) {
+src/simavr/sim/sim_gdb.c:		DBG(printf("avr_gdb_processor hit breakpoint at %08x\n", avr->pc);)
+src/simavr/sim/sim_gdb.c:		avr->state = cpu_Stopped;
+src/simavr/sim/sim_gdb.c:	} else if (avr->state == cpu_StepDone) {
+src/simavr/sim/sim_gdb.c:		avr->state = cpu_Stopped;
+src/simavr/sim/sim_gdb.c:	if (avr->gdb)
+src/simavr/sim/sim_gdb.c:	avr->gdb = NULL;
+src/simavr/sim/sim_gdb.c:	address.sin_port = htons (avr->gdb_port);
+src/simavr/sim/sim_gdb.c:	printf("avr_gdb_init listening on port %d\n", avr->gdb_port);
+src/simavr/sim/sim_gdb.c:	avr->gdb = g;
+src/simavr/sim/sim_gdb.c:	avr->run = avr_callback_run_gdb;
+src/simavr/sim/sim_gdb.c:	avr->sleep = avr_callback_sleep_gdb;
+src/simavr/sim/sim_gdb.c:	if (!avr->gdb)
+src/simavr/sim/sim_gdb.c:	avr->run = avr_callback_run_raw; // restore normal callbacks
+src/simavr/sim/sim_gdb.c:	avr->sleep = avr_callback_sleep_raw;
+src/simavr/sim/sim_gdb.c:	if (avr->gdb->listen != -1)
+src/simavr/sim/sim_gdb.c:		close(avr->gdb->listen);
+src/simavr/sim/sim_gdb.c:	avr->gdb->listen = -1;
+src/simavr/sim/sim_gdb.c:	if (avr->gdb->s != -1)
+src/simavr/sim/sim_gdb.c:		close(avr->gdb->s);
+src/simavr/sim/sim_gdb.c:	avr->gdb->s = -1;
+src/simavr/sim/sim_gdb.c:	free(avr->gdb);
+src/simavr/sim/sim_gdb.c:	avr->gdb = NULL;
+src/simavr/sim/sim_interrupts.c:	avr_int_table_p table = &avr->interrupts;
+src/simavr/sim/sim_interrupts.c:	avr_init_irq(&avr->irq_pool, table->irq,
+src/simavr/sim/sim_interrupts.c:	avr_int_table_p table = &avr->interrupts;
+src/simavr/sim/sim_interrupts.c:	avr->interrupt_state = 0;
+src/simavr/sim/sim_interrupts.c:	avr_int_table_p table = &avr->interrupts;
+src/simavr/sim/sim_interrupts.c:	avr_init_irq(&avr->irq_pool, vector->irq,
+src/simavr/sim/sim_interrupts.c:	avr_int_table_p table = &avr->interrupts;
+src/simavr/sim/sim_interrupts.c:				vector->vector, !!avr->sreg[S_I], avr_regbit_get(avr, vector->enable),
+src/simavr/sim/sim_interrupts.c:				(long long int)avr->cycle, avr->pc);
+src/simavr/sim/sim_interrupts.c:	avr_raise_irq(avr->interrupts.irq + AVR_INT_IRQ_PENDING, 1);
+src/simavr/sim/sim_interrupts.c:		avr_int_table_p table = &avr->interrupts;
+src/simavr/sim/sim_interrupts.c:		if (avr->sreg[S_I] && avr->interrupt_state == 0)
+src/simavr/sim/sim_interrupts.c:			avr->interrupt_state = 1;
+src/simavr/sim/sim_interrupts.c:		if (avr->state == cpu_Sleeping) {
+src/simavr/sim/sim_interrupts.c:			avr->state = cpu_Running;	// in case we were sleeping
+src/simavr/sim/sim_interrupts.c:	avr_raise_irq_float(avr->interrupts.irq + AVR_INT_IRQ_PENDING,
+src/simavr/sim/sim_interrupts.c:							&avr->interrupts.pending, 0)->vector : 0,
+src/simavr/sim/sim_interrupts.c:	avr_raise_irq(avr->interrupts.irq + AVR_INT_IRQ_PENDING,
+src/simavr/sim/sim_interrupts.c:	avr_int_table_p table = &avr->interrupts;
+src/simavr/sim/sim_interrupts.c:	avr_int_table_p table = &avr->interrupts;
+src/simavr/sim/sim_interrupts.c:	avr_raise_irq(avr->interrupts.irq + AVR_INT_IRQ_PENDING,
+src/simavr/sim/sim_interrupts.c:	if (!avr->sreg[S_I] || !avr->interrupt_state)
+src/simavr/sim/sim_interrupts.c:	if (avr->interrupt_state < 0) {
+src/simavr/sim/sim_interrupts.c:		avr->interrupt_state++;
+src/simavr/sim/sim_interrupts.c:		if (avr->interrupt_state == 0)
+src/simavr/sim/sim_interrupts.c:			avr->interrupt_state = avr_has_pending_interrupts(avr);
+src/simavr/sim/sim_interrupts.c:	avr_int_table_p table = &avr->interrupts;
+src/simavr/sim/sim_interrupts.c:	avr_raise_irq(avr->interrupts.irq + AVR_INT_IRQ_PENDING,
+src/simavr/sim/sim_interrupts.c:		avr->interrupt_state = avr_has_pending_interrupts(avr);
+src/simavr/sim/sim_interrupts.c:		_avr_push_addr(avr, avr->pc);
+src/simavr/sim/sim_interrupts.c:		avr->pc = vector->vector * avr->vector_size;
+src/simavr/sim/sim_time.h:	return avr->frequency * (avr_cycle_count_t)usec / 1000000;
+src/simavr/sim/sim_time.h:	return 1000000L * cycles / avr->frequency;
+src/simavr/sim/sim_time.h:	return (uint64_t)1E6 * (uint64_t)cycles / (avr->frequency/1000);
+src/simavr/sim/sim_time.h:	return avr->frequency / hz;
+src/simavr/sim/sim_cmds.c:	avr_cmd_table_t * commands = &avr->commands;
+src/simavr/sim/sim_cmds.c:	avr_cmd_table_t * commands = &avr->commands;
+src/simavr/sim/sim_cmds.c:	avr_cmd_table_t * commands = &avr->commands;
+src/simavr/sim/sim_cmds.c:	if (avr->vcd)
+src/simavr/sim/sim_cmds.c:		avr_vcd_start(avr->vcd);
+src/simavr/sim/sim_cmds.c:	if (avr->vcd)
+src/simavr/sim/sim_cmds.c:		avr_vcd_stop(avr->vcd);
+src/simavr/sim/sim_cmds.c:	memset(&avr->commands, 0, sizeof(avr->commands));
+src/simavr/sim/sim_vcd_file.c:		avr->state = cpu_Done;
+src/simavr/sim/sim_vcd_file.c:		.when = vcd->avr->cycle,
+src/simavr/sim/sim_vcd_file.c:	avr_init_irq(&vcd->avr->irq_pool, &s->irq, index, 1, names);
+src/simavr/sim/sim_vcd_file.c:	vcd->start = vcd->avr->cycle;
+src/simavr/sim/avr_watchdog.c:		p->reset_context.avr_run = avr->run;
+src/simavr/sim/avr_watchdog.c:		avr->run = avr_watchdog_run_callback_software_reset;
+src/simavr/sim/avr_watchdog.c:	p->cycle_count = (p->cycle_count * avr->frequency) / 128000;
+src/simavr/sim/avr_watchdog.c:	uint8_t old_v = avr->data[addr]; // allow gdb to see write...
+src/simavr/sim/avr_watchdog.c:		avr->data[addr] = old_v;
+src/simavr/sim/avr_watchdog.c:		avr->run = p->reset_context.avr_run;
+src/simavr/cores/sim_core_declare.h: * toolchain and avr-libc. This affects a lot of names, like MCUSR etc
+src/simavr/sim/read_elf.c:		//	avr->frequency = f_cpu;
+src/simavr/sim/read_elf.c://	hdump("flash", avr->flash, offset);
+src/simavr/sim/sim_avr.h: * The current log level is kept in avr->log.
+src/simavr/sim/sim_avr.h: * These are accessors for avr->data but allows watchpoints to be set for gdb
+src/simavr/sim/avr_timer.c:	return p->io.avr->data[p->comp[compi].r_ocr] |
+src/simavr/sim/avr_timer.c:		    		  (p->io.avr->data[p->comp[compi].r_ocrh] << 8) : 0);
+src/simavr/sim/avr_timer.c:    return avr->data[comp->r_ocr] | (ocrh ? (avr->data[ocrh] << 8) : 0);
+src/simavr/sim/avr_timer.c:	return p->io.avr->data[p->r_tcnt] |
+src/simavr/sim/avr_timer.c:				(p->r_tcnth ? (p->io.avr->data[p->r_tcnth] << 8) : 0);
+src/simavr/sim/avr_timer.c:	return p->io.avr->data[p->r_icr] |
+src/simavr/sim/avr_timer.c:				(p->r_tcnth ? (p->io.avr->data[p->r_icrh] << 8) : 0);
+src/simavr/sim/avr_timer.c:				dispatch[compi](avr, avr->cycle, param);
+src/simavr/sim/avr_timer.c:			if (p->comp[compi].comp_cycles < p->tov_cycles && p->comp[compi].comp_cycles >= (avr->cycle - when)) {
+src/simavr/sim/avr_timer.c:					p->comp[compi].comp_cycles - (avr->cycle - next),
+src/simavr/sim/avr_timer.c:			uint64_t when = avr->cycle - p->tov_base;
+src/simavr/sim/avr_timer.c:	avr->data[p->r_tcnt] = tcnt;
+src/simavr/sim/avr_timer.c:		avr->data[p->r_tcnth] = tcnt >> 8;
+src/simavr/sim/avr_timer.c:			avr_timer_tov(avr, avr->cycle - cycles, p);
+src/simavr/sim/avr_timer.c:		//	tcnt = ((avr->cycle - p->tov_base) * p->tov_top) / p->tov_cycles;
+src/simavr/sim/avr_timer.c:			resulting_clock = (float)avr->frequency / prescaler;
+src/simavr/sim/avr_timer.c:			tov_cycles_exact = (float)avr->frequency / p->ext_clock * prescaler * (top+1);
+src/simavr/sim/avr_timer.c:					__FUNCTION__, p->name, ((float)avr->frequency / tov_cycles_exact),
+src/simavr/sim/avr_timer.c:			comp_cycles = (uint32_t)((float)avr->frequency / p->ext_clock * prescaler * (ocr+1));
+src/simavr/sim/avr_timer.c:				avr_timer_tov(avr, avr->cycle, p);
+src/simavr/sim/avr_timer.c:				avr_cycle_timer_register(avr, p->tov_cycles - (avr->cycle - orig_tov_base), avr_timer_tov, p);
+src/simavr/sim/avr_timer.c:				//p->cs_div_value = (uint32_t)((uint64_t)avr->frequency * (1 << p->cs_div[new_cs]) / 32768);
+src/simavr/sim/avr_timer.c:	avr->data[p->r_icr] = tcnt;
+src/simavr/sim/avr_timer.c:		avr->data[p->r_icrh] = tcnt >> 8;
+src/simavr/sim/avr_timer.c:				if (new_freq <= port->avr->frequency/4) {
+src/simavr/sim/avr_timer.c:				if (new_freq <= port->avr->frequency/2) {
+src/simavr/cores/sim_mega324.c:/* borken avr-libc missing these declarations :/ */
+src/simavr/cores/sim_megaxm1.c:	avr->data[ mcu->lin.r_linbtr] = 0x20;
+src/simavr/cores/avr/iotnx4.h:/* keep misspelled names from avr-libc 1.4.[0..1] for compatibility */
+src/simavr/cores/avr/iom328p.h:		     * avr-libc versions; not an official name */

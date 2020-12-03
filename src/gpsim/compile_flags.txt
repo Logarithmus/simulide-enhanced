@@ -1,0 +1,15 @@
+-pipe
+-Wno-unused-parameter
+-Wno-missing-field-initializers
+-Wno-implicit-fallthrough
+-fno-pic
+-O2
+-std=c11
+-Wall
+-Wextra
+-D_REENTRANT
+-fPIC
+-I.
+-Idevices
+-Imodules
+-Iregisters

@@ -1,0 +1,16 @@
+-pipe
+-Wno-unused-parameter
+-Wno-missing-field-initializers
+-Wno-implicit-fallthrough
+-fno-pic
+-O2
+-std=c17
+-Wall
+-Wextra
+-D_REENTRANT
+-fPIC
+-DMAINMODULE_EXPORT=
+-I.
+-Isim
+-Isim/avr
+-Icores
