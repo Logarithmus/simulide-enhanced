@@ -29,11 +29,9 @@
 #include "sim_gdb.h"
 #include "avr_uart.h"
 #include "avr_eeprom.h"
+#include "read_elf.h"
 
 //AvrProcessor* AvrProcessor::m_pSelf = 0l;
-
-extern "C"
-int elf_read_firmware_ext(const char * file, elf_firmware_t * firmware);
 
 AvrProcessor::AvrProcessor( QObject* parent ) 
             : BaseProcessor( parent )

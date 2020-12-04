@@ -107,7 +107,7 @@ int elf_read_firmware_ext(const char * file, elf_firmware_t * firmware)
 	int fd; // File Descriptor
 
 	if ((fd = open(file, O_RDONLY | O_BINARY)) == -1 ||
-			(read(fd, &elf_header, sizeof(elf_header))) < sizeof(elf_header)) {
+			(read(fd, &elf_header, sizeof(elf_header))) < static_cast<ssize_t>(sizeof(elf_header))) {
 		AVR_LOG(NULL, LOG_ERROR, "could not read %s\n", file);
 		perror(file);
 		close(fd);
@@ -167,7 +167,7 @@ int elf_read_firmware_ext(const char * file, elf_firmware_t * firmware)
 			firmware->bsssize = s->d_size;
 		} else if (!strcmp(name, ".mmcu")) {
 			Elf_Data *s = elf_getdata(scn, NULL);
-			elf_parse_mmcu_section(firmware, s->d_buf, s->d_size);
+			elf_parse_mmcu_section(firmware, static_cast<uint8_t*>(s->d_buf), static_cast<uint32_t>(s->d_size));
 			//printf("%s: avr_mcu_t size %ld / read %ld\n", __FUNCTION__, sizeof(struct avr_mcu_t), s->d_size);
 		//	avr->frequency = f_cpu;
             continue;
@@ -203,17 +203,17 @@ int elf_read_firmware_ext(const char * file, elf_firmware_t * firmware)
 					// if its a bootloader, this symbol will be the entry point we need
 					if (!strcmp(name, "__vectors"))
 						firmware->flashbase = sym.st_value;
-					avr_symbol_t * s = malloc(sizeof(avr_symbol_t) + strlen(name) + 1);
+					avr_symbol_t * s = static_cast<avr_symbol_t*>(malloc(sizeof(avr_symbol_t) + strlen(name) + 1));
 					strcpy((char*)s->symbol, name);
 					s->addr = sym.st_value;
 					if (!(firmware->symbolcount % 8))
-						firmware->symbol = realloc(
+						firmware->symbol = static_cast<avr_symbol_t**>(realloc(
 							firmware->symbol,
-							(firmware->symbolcount + 8) * sizeof(firmware->symbol[0]));
+							(firmware->symbolcount + 8) * sizeof(firmware->symbol[0])));
 
 					// insert new element, keep the array sorted
 					int insert = -1;
-					for (int si = 0; si < firmware->symbolcount && insert == -1; si++)
+					for (uint32_t si = 0; si < firmware->symbolcount && insert == -1; si++)
 						if (firmware->symbol[si]->addr >= s->addr)
 							insert = si;
 					if (insert == -1)
@@ -253,7 +253,7 @@ int elf_read_firmware_ext(const char * file, elf_firmware_t * firmware)
 	}
     */
 
-    for (int ii = 0; ii < section_no; ii++)
+    for (size_t ii = 0; ii < section_no; ii++)
     {
         if (((uint32_t)flash_sections[ii].shdr.sh_addr & 0x800000) != 0)
         {
@@ -264,7 +264,7 @@ int elf_read_firmware_ext(const char * file, elf_firmware_t * firmware)
         if (size > firmware->flashsize)
             firmware->flashsize = size;
     }
-    firmware->flash = malloc(firmware->flashsize);
+    firmware->flash = static_cast<uint8_t*>(malloc(firmware->flashsize));
     memset(firmware->flash, 0xFF, firmware->flashsize);
     // using unsigned int for output, since there is no AVR with 4GB
     if (data_text) {
@@ -281,7 +281,7 @@ int elf_read_firmware_ext(const char * file, elf_firmware_t * firmware)
         offset += data_data->d_size;
         firmware->datasize = data_data->d_size;
     }
-    for (int ii = 0; ii < section_no; ii++)
+    for (size_t ii = 0; ii < section_no; ii++)
     {
         if (flash_sections[ii].data_ptr == data_text)
         {
@@ -308,7 +308,7 @@ int elf_read_firmware_ext(const char * file, elf_firmware_t * firmware)
 
 	if (data_ee) {
 	//	hdump("eeprom", data_ee->d_buf, data_ee->d_size);
-		firmware->eeprom = malloc(data_ee->d_size);
+		firmware->eeprom = static_cast<uint8_t*>(malloc(data_ee->d_size));
 		memcpy(firmware->eeprom, data_ee->d_buf, data_ee->d_size);
 		AVR_LOG(NULL, LOG_TRACE, "Loaded %u .eeprom\n", (unsigned int)data_ee->d_size);
 		firmware->eesize = data_ee->d_size;
