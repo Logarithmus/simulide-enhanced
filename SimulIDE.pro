@@ -18,7 +18,7 @@
  ###########################################################################
  
 
-VERSION = "0.4.13"
+VERSION = "0.4.14"
 RELEASE = "-SR5"
 
 TEMPLATE = app
@@ -156,8 +156,8 @@ RESOURCES = ../src/application.qrc
 QMAKE_CXXFLAGS += -Wno-unused-parameter
 QMAKE_CXXFLAGS += -Wno-missing-field-initializers
 QMAKE_CXXFLAGS += -Wno-implicit-fallthrough
-QMAKE_CXXFLAGS -= -fPIC
-QMAKE_CXXFLAGS += -fno-pic
+# QMAKE_CXXFLAGS -= -fPIC
+# QMAKE_CXXFLAGS += -fno-pic
 
 QMAKE_CFLAGS += --std=gnu11
 QMAKE_CFLAGS += -Wno-unused-result
@@ -168,8 +168,8 @@ QMAKE_CFLAGS += -Wno-implicit-fallthrough
 QMAKE_CFLAGS += -Wno-int-conversion
 QMAKE_CFLAGS += -Wno-sign-compare
 QMAKE_CFLAGS += -O2
-QMAKE_CFLAGS -= -fPIC
-QMAKE_CFLAGS += -fno-pic
+# QMAKE_CFLAGS -= -fPIC
+# QMAKE_CFLAGS += -fno-pic
 
 
 win32 {
@@ -184,7 +184,7 @@ win32 {
 linux {
     OS = Linux
     QMAKE_LIBS += -lelf
-    QMAKE_LFLAGS += -no-pie
+    # QMAKE_LFLAGS += -no-pie
 }
 macx {
     OS = MacOs
@@ -193,7 +193,7 @@ macx {
         /usr/local/Cellar/libelf/0.8.13_1/include/libelf
     
     LIBS += /usr/local/lib/libelf.a
-    QMAKE_LFLAGS += -no-pie
+    # QMAKE_LFLAGS += -no-pie
 }
 
 CONFIG += qt 
