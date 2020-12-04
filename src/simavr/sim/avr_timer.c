@@ -41,8 +41,8 @@ _timer_get_ocr(
 		int compi)
 {
 	return p->io.avr->data[p->comp[compi].r_ocr] |
-		      (p->comp[compi].r_ocrh ?
-		    		  (p->io.avr->data[p->comp[compi].r_ocrh] << 8) : 0);
+			  (p->comp[compi].r_ocrh ?
+					  (p->io.avr->data[p->comp[compi].r_ocrh] << 8) : 0);
 }
 
 static uint16_t
@@ -51,7 +51,8 @@ _timer_get_comp_ocr(
 		avr_timer_comp_p comp)
 {
 	int ocrh = comp->r_ocrh;
-    return avr->data[comp->r_ocr] | (ocrh ? (avr->data[ocrh] << 8) : 0);
+	return avr->data[comp->r_ocr] |
+		(ocrh ? (avr->data[ocrh] << 8) : 0);
 }
 
 static uint16_t
@@ -82,28 +83,29 @@ avr_timer_comp(
 	uint8_t mode = avr_regbit_get(avr, p->comp[comp].com);
 	avr_irq_t * irq = &p->io.irq[TIMER_IRQ_OUT_COMP + comp];
 
-    switch (mode)
-    {
+	switch (mode) {
 		case avr_timer_com_normal: // Normal mode OCnA disconnected
 			break;
-
 		case avr_timer_com_toggle: // Toggle OCnA on compare match
 			if (p->comp[comp].com_pin.reg)	// we got a physical pin
-                avr_raise_irq(irq, AVR_IOPORT_OUTPUT | (avr_regbit_get(avr, p->comp[comp].com_pin) ? 0 : 1));
+				avr_raise_irq(irq,
+						AVR_IOPORT_OUTPUT |
+						(avr_regbit_get(avr, p->comp[comp].com_pin) ? 0 : 1));
 			else // no pin, toggle the IRQ anyway
-                avr_raise_irq(irq, p->io.irq[TIMER_IRQ_OUT_COMP + comp].value ? 0 : 1);
+				avr_raise_irq(irq,
+						p->io.irq[TIMER_IRQ_OUT_COMP + comp].value ? 0 : 1);
 			break;
-
 		case avr_timer_com_clear:
-            avr_raise_irq(irq, 0);
+			avr_raise_irq(irq, 0);
 			break;
-
 		case avr_timer_com_set:
-            avr_raise_irq(irq, 1);
+			avr_raise_irq(irq, 1);
 			break;
 	}
 
-    return p->tov_cycles ? 0 : p->comp[comp].comp_cycles ? when + p->comp[comp].comp_cycles : 0;
+	return p->tov_cycles ? 0 :
+				p->comp[comp].comp_cycles ?
+						when + p->comp[comp].comp_cycles : 0;
 }
 
 static void
@@ -118,18 +120,14 @@ avr_timer_comp_on_tov(
 	uint8_t mode = avr_regbit_get(avr, p->comp[comp].com);
 	avr_irq_t * irq = &p->io.irq[TIMER_IRQ_OUT_COMP + comp];
 
-    switch (mode)
-    {
+	switch (mode) {
 		case avr_timer_com_normal: // Normal mode
 			break;
-
 		case avr_timer_com_toggle: // toggle on compare match => on tov do nothing
 			break;
-
 		case avr_timer_com_clear: // clear on compare match => set on tov
 			avr_raise_irq(irq, 1);
 			break;
-
 		case avr_timer_com_set: // set on compare match => clear on tov
 			avr_raise_irq(irq, 0);
 			break;
@@ -217,21 +215,18 @@ avr_timer_irq_ext_clock(
 	}
 
 	switch (p->wgm_op_mode_kind) {
-        case avr_timer_wgm_fc_pwm:	// in the avr_timer_write_ocr comment "OCR is not used here" - why?
+		case avr_timer_wgm_fc_pwm:	// in the avr_timer_write_ocr comment "OCR is not used here" - why?
 		case avr_timer_wgm_pwm:
-            if ((p->ext_clock_flags & AVR_TIMER_EXTCLK_FLAG_REVDIR) != 0)
-            {
+			if ((p->ext_clock_flags & AVR_TIMER_EXTCLK_FLAG_REVDIR) != 0) {
 				--p->tov_base;
-                if (p->tov_base == 0) // overflow occured
-                {
+				if (p->tov_base == 0) {
+					// overflow occured
 					p->ext_clock_flags &= ~AVR_TIMER_EXTCLK_FLAG_REVDIR; // restore forward count direction
 					overflow = 1;
 				}
 			}
-            else
-            {
-                if (++p->tov_base >= p->tov_top)
-                {
+			else {
+				if (++p->tov_base >= p->tov_top) {
 					p->ext_clock_flags |= AVR_TIMER_EXTCLK_FLAG_REVDIR; // prepare to count down
 				}
 			}
@@ -442,7 +437,7 @@ avr_timer_configure(
 
 	avr_t * avr = p->io.avr;
 	float resulting_clock = 0.0f; // used only for trace
-	float tov_cycles_exact;
+	float tov_cycles_exact = 0;
 
 	uint8_t as2 = p->ext_clock_flags & AVR_TIMER_EXTCLK_FLAG_AS2;
 	uint8_t use_ext_clock = as2 || (p->ext_clock_flags & AVR_TIMER_EXTCLK_FLAG_TN);
@@ -462,7 +457,8 @@ avr_timer_configure(
 			if (prescaler != 0)
 				resulting_clock = p->ext_clock / prescaler;
 			tov_cycles_exact = (float)avr->frequency / p->ext_clock * prescaler * (top+1);
-			p->tov_cycles = round(tov_cycles_exact);
+			// p->tov_cycles = round(tov_cycles_exact); -- don't want libm!
+			p->tov_cycles = tov_cycles_exact + .5f; // Round to integer
 			p->tov_cycles_fract = tov_cycles_exact - p->tov_cycles;
 		}
 	}
@@ -574,15 +570,17 @@ avr_timer_reconfigure(
 		case avr_timer_wgm_ctc: {
 			avr_timer_configure(p, p->cs_div_value, _timer_get_ocr(p, AVR_TIMER_COMPA), reset);
 		}	break;
-        case avr_timer_wgm_pwm:
-        {
+		case avr_timer_wgm_pwm: {
 			uint16_t top = (p->mode.top == avr_timer_wgm_reg_ocra) ?
 				_timer_get_ocr(p, AVR_TIMER_COMPA) : _timer_get_icr(p);
 			avr_timer_configure(p, p->cs_div_value, top, reset);
 		}	break;
-		case avr_timer_wgm_fast_pwm:
-			avr_timer_configure(p, p->cs_div_value, p->wgm_op_mode_size, reset);
-			break;
+		case avr_timer_wgm_fast_pwm: {
+			uint16_t top =
+				(p->mode.top == avr_timer_wgm_reg_icr) ? _timer_get_icr(p) :
+				p->wgm_op_mode_size;
+			avr_timer_configure(p, p->cs_div_value, top, reset);
+		}	break;
 		case avr_timer_wgm_none:
 			avr_timer_configure(p, p->cs_div_value, p->wgm_op_mode_size, reset);
 			break;
@@ -620,15 +618,14 @@ avr_timer_write_ocr(
 			avr_timer_reconfigure(timer, 0);
 			break;
 		case avr_timer_wgm_pwm:
-			if (timer->mode.top != avr_timer_wgm_reg_ocra) { // ICR is the top, update comp_cycles
-				uint32_t ocr = _timer_get_comp_ocr(avr, comp);
-				uint32_t prescaler = timer->cs_div_value;
-				comp->comp_cycles = prescaler * ocr;
+			if (timer->mode.top != avr_timer_wgm_reg_ocra) {
 				avr_raise_irq(timer->io.irq + TIMER_IRQ_OUT_PWM0, _timer_get_ocr(timer, AVR_TIMER_COMPA));
-			}else {
+			} else {
 				avr_timer_reconfigure(timer, 0); // if OCRA is the top, reconfigure needed
 			}
 			avr_raise_irq(timer->io.irq + TIMER_IRQ_OUT_PWM1, _timer_get_ocr(timer, AVR_TIMER_COMPB));
+			if (sizeof(timer->comp)>2)
+				avr_raise_irq(timer->io.irq + TIMER_IRQ_OUT_PWM2, _timer_get_ocr(timer, AVR_TIMER_COMPC));
 			break;
 		case avr_timer_wgm_fast_pwm:
 			if (oldv != _timer_get_comp_ocr(avr, comp))
@@ -637,6 +634,9 @@ avr_timer_write_ocr(
 					_timer_get_ocr(timer, AVR_TIMER_COMPA));
 			avr_raise_irq(timer->io.irq + TIMER_IRQ_OUT_PWM1,
 					_timer_get_ocr(timer, AVR_TIMER_COMPB));
+			if (sizeof(timer->comp)>2)
+				avr_raise_irq(timer->io.irq + TIMER_IRQ_OUT_PWM2,
+						_timer_get_ocr(timer, AVR_TIMER_COMPC));
 			break;
 		default:
 			AVR_LOG(avr, LOG_WARNING, "TIMER: %s-%c mode %d UNSUPPORTED\n",
@@ -675,8 +675,8 @@ avr_timer_write(
 			// cancel everything
 			avr_timer_cancel_all_cycle_timers(avr, p, 1);
 
-			//AVR_LOG(avr, LOG_TRACE, "TIMER: %s-%c clock turned off\n",
-			//		__func__, p->name);
+			AVR_LOG(avr, LOG_TRACE, "TIMER: %s-%c clock turned off\n",
+					__func__, p->name);
 			return;
 		}
 
@@ -725,7 +725,7 @@ avr_timer_write_pending(
 		cp[compi] = avr_regbit_get(avr, p->comp[compi].interrupt.raised);
 
 	// write the value
-    // avr_core_watch_write(avr, addr, v); // This raises flags instead of clearing it.
+	// avr_core_watch_write(avr, addr, v); // This raises flags instead of clearing it.
 
 	// clear any interrupts & flags
 	avr_clear_interrupt_if(avr, &p->overflow, ov);
@@ -856,6 +856,7 @@ avr_timer_reset(
 static const char * irq_names[TIMER_IRQ_COUNT] = {
 	[TIMER_IRQ_OUT_PWM0] = "8>pwm0",
 	[TIMER_IRQ_OUT_PWM1] = "8>pwm1",
+	[TIMER_IRQ_OUT_PWM2] = "8>pwm2",
 	[TIMER_IRQ_IN_ICP] = "<icp",
 	[TIMER_IRQ_OUT_COMP + 0] = ">compa",
 	[TIMER_IRQ_OUT_COMP + 1] = ">compb",
@@ -888,6 +889,7 @@ avr_timer_init(
 	// pwm value it makes sense not to bother.
 	p->io.irq[TIMER_IRQ_OUT_PWM0].flags |= IRQ_FLAG_FILTERED;
 	p->io.irq[TIMER_IRQ_OUT_PWM1].flags |= IRQ_FLAG_FILTERED;
+	p->io.irq[TIMER_IRQ_OUT_PWM2].flags |= IRQ_FLAG_FILTERED;
 
 	if (p->wgm[0].reg) // these are not present on older AVRs
 		avr_register_io_write(avr, p->wgm[0].reg, avr_timer_write, p);

@@ -39,6 +39,7 @@ enum {
 enum {
 	TIMER_IRQ_OUT_PWM0 = 0,
 	TIMER_IRQ_OUT_PWM1,
+	TIMER_IRQ_OUT_PWM2,
 	TIMER_IRQ_IN_ICP,	// input capture
 	TIMER_IRQ_OUT_COMP,	// comparator pins output IRQ
 
@@ -71,7 +72,7 @@ enum {
 	avr_timer_com_toggle,   // Toggle OCnx on compare match
 	avr_timer_com_clear,    // clear OCnx on compare match
 	avr_timer_com_set,      // set OCnx on compare match
-	
+
 };
 
 enum {
@@ -104,6 +105,7 @@ typedef struct avr_timer_wgm_t {
 #define AVR_TIMER_WGM_FCPWM10() { .kind = avr_timer_wgm_fc_pwm, .size=10 }
 #define AVR_TIMER_WGM_OCPWM() { .kind = avr_timer_wgm_pwm, .top = avr_timer_wgm_reg_ocra }
 #define AVR_TIMER_WGM_ICPWM() { .kind = avr_timer_wgm_pwm, .top = avr_timer_wgm_reg_icr }
+#define AVR_TIMER_WGM_ICFASTPWM() { .kind = avr_timer_wgm_fast_pwm, .top = avr_timer_wgm_reg_icr }
 
 typedef struct avr_timer_comp_t {
 		avr_int_vector_t	interrupt;		// interrupt vector

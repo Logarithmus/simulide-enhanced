@@ -432,9 +432,9 @@ const struct mcu_t SIM_CORENAME = {
 	},
 #endif
 #ifdef MSTR0 /* xx4a and xx4pa series */
-	AVR_SPIX_DECLARE(0, PRR0, PRSPI, 'B', 7, 6, 5, 4),
+	AVR_SPIX_DECLARE(0, PRR0, PRSPI),
 #else
-	AVR_SPI_DECLARE(PRR0, PRSPI, 'B', 7, 6, 5, 4),
+	AVR_SPI_DECLARE(PRR0, PRSPI),
 #endif
 	.twi = {
 		.disabled = AVR_IO_REGBIT(PRR0,PRTWI),

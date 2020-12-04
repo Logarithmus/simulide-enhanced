@@ -20,7 +20,6 @@
  */
 
 #include "sim_avr.h"
-#include "sim_core_declare.h"
 #include "avr_eeprom.h"
 #include "avr_flash.h"
 #include "avr_watchdog.h"
@@ -39,6 +38,8 @@ void usb162_reset(struct avr_t * avr);
 #define _AVR_IO_H_
 #define __ASSEMBLER__
 #include "avr/iousb162.h"
+
+#include "sim_core_declare.h"
 
 const struct mcu_t {
 	avr_t			 core;
@@ -201,7 +202,7 @@ const struct mcu_t {
 			},
 		},
 	},
-	AVR_SPI_DECLARE(PRR0, PRSPI, 'B', 7, 6, 5, 4),
+	AVR_SPI_DECLARE(0, 0),
 	.usb = {
 		.name='1',
 		.disabled=AVR_IO_REGBIT(PRR1, PRUSB),// bit in the PRR

@@ -64,15 +64,14 @@ gdb_watch_find(
 		const avr_gdb_watchpoints_t * w,
 		uint32_t addr )
 {
-//#ifndef _WIN32
-	for (uint32_t i = 0; i < w->len; i++) {
+	for (int i = 0; i < w->len; i++) {
 		if (w->points[i].addr > addr) {
 			return -1;
 		} else if (w->points[i].addr == addr) {
 			return i;
 		}
 	}
-//#endif
+
 	return -1;
 }
 
@@ -85,15 +84,14 @@ gdb_watch_find_range(
 		const avr_gdb_watchpoints_t * w,
 		uint32_t addr )
 {
-//#ifndef _WIN32
-	for (uint32_t i = 0; i < w->len; i++) {
+	for (int i = 0; i < w->len; i++) {
 		if (w->points[i].addr > addr) {
 			return -1;
 		} else if (w->points[i].addr <= addr && addr < w->points[i].addr + w->points[i].size) {
 			return i;
 		}
 	}
-//#endif
+
 	return -1;
 }
 
@@ -107,7 +105,6 @@ gdb_watch_add_or_update(
 		uint32_t addr,
 		uint32_t size )
 {
-//#ifndef _WIN32
 	/* If the watchpoint exists, update it. */
 	int i = gdb_watch_find(w, addr);
 	if (i != -1) {
@@ -139,7 +136,7 @@ gdb_watch_add_or_update(
 	w->points[i].kind = kind;
 	w->points[i].addr = addr;
 	w->points[i].size = size;
-//#endif
+
 	return 0;
 }
 
@@ -152,7 +149,6 @@ gdb_watch_rm(
 		enum avr_gdb_watch_type kind,
 		uint32_t addr )
 {
-//#ifndef _WIN32
 	int i = gdb_watch_find(w, addr);
 	if (i == -1) {
 		return -1;
@@ -168,7 +164,7 @@ gdb_watch_rm(
 	}
 
 	w->len--;
-//#endif
+
 	return 0;
 }
 
@@ -184,7 +180,6 @@ gdb_send_reply(
 		avr_gdb_t * g,
 		char * cmd )
 {
-//#ifndef _WIN32
 	uint8_t reply[1024];
 	uint8_t * dst = reply;
 	uint8_t check = 0;
@@ -196,7 +191,6 @@ gdb_send_reply(
 	sprintf((char*)dst, "#%02x", check);
 	DBG(printf("%s '%s'\n", __FUNCTION__, reply);)
 	send(g->s, reply, dst - reply + 3, 0);
-//#endif
 }
 
 static void
@@ -204,15 +198,16 @@ gdb_send_quick_status(
 		avr_gdb_t * g,
 		uint8_t signal )
 {
-//#ifndef _WIN32
 	char cmd[64];
+	uint8_t sreg;
+
+	READ_SREG_INTO(g->avr, sreg);
 
 	sprintf(cmd, "T%02x20:%02x;21:%02x%02x;22:%02x%02x%02x00;",
-		signal ? signal : 5, g->avr->data[R_SREG],
+		signal ? signal : 5, sreg,
 		g->avr->data[R_SPL], g->avr->data[R_SPH],
 		g->avr->pc & 0xff, (g->avr->pc>>8)&0xff, (g->avr->pc>>16)&0xff);
 	gdb_send_reply(g, cmd);
-//#endif
 }
 
 static int
@@ -223,7 +218,6 @@ gdb_change_breakpoint(
 		uint32_t addr,
 		uint32_t size )
 {
-//#ifndef _WIN32
 	DBG(printf("set %d kind %d addr %08x len %d\n", set, kind, addr, len);)
 
 	if (set) {
@@ -231,7 +225,7 @@ gdb_change_breakpoint(
 	} else {
 		return gdb_watch_rm(w, kind, addr);
 	}
-//#endif
+
 	return -1;
 }
 
@@ -241,7 +235,6 @@ gdb_write_register(
 		int regi,
 		uint8_t * src )
 {
-//#ifndef _WIN32
 	switch (regi) {
 		case 0 ... 31:
 			g->avr->data[regi] = *src;
@@ -258,7 +251,6 @@ gdb_write_register(
 			g->avr->pc = src[0] | (src[1] << 8) | (src[2] << 16) | (src[3] << 24);
 			return 4;
 	}
-//#endif
 	return 1;
 }
 
@@ -268,7 +260,6 @@ gdb_read_register(
 		int regi,
 		char * rep )
 {
-//#ifndef _WIN32
 	switch (regi) {
 		case 0 ... 31:
 			sprintf(rep, "%02x", g->avr->data[regi]);
@@ -288,8 +279,6 @@ gdb_read_register(
 			break;
 	}
 	return strlen(rep);
-//#endif
-return 0;
 }
 
 static void
@@ -297,7 +286,6 @@ gdb_handle_command(
 		avr_gdb_t * g,
 		char * cmd )
 {
-//#ifndef _WIN32
 	avr_t * avr = g->avr;
 	char rep[1024];
 	uint8_t command = *cmd++;
@@ -332,7 +320,55 @@ gdb_handle_command(
 
 				gdb_send_reply(g, rep);
 				break;
-            }
+			} else if (strncmp(cmd, "RegisterInfo", 12) == 0) {
+				// Send back the information we have on this register (if any).
+				long n = strtol(cmd + 12, NULL, 16);
+				if (n < 32) {
+					// General purpose (8-bit) registers.
+					snprintf(rep, sizeof(rep), "name:r%ld;bitsize:8;offset:0;encoding:uint;format:hex;set:General Purpose Registers;gcc:%ld;dwarf:%ld;", n, n, n);
+					gdb_send_reply(g, rep);
+					break;
+				} else if (n == 32) {
+					// SREG (flags) register.
+					snprintf(rep, sizeof(rep), "name:sreg;bitsize:8;offset:0;encoding:uint;format:binary;set:General Purpose Registers;gcc:32;dwarf:32;");
+					gdb_send_reply(g, rep);
+					break;
+				} else if (n == 33) {
+					// SP register (SPH and SPL combined).
+					snprintf(rep, sizeof(rep), "name:sp;bitsize:16;offset:0;encoding:uint;format:hex;set:General Purpose Registers;gcc:33;dwarf:33;generic:sp;");
+					gdb_send_reply(g, rep);
+					break;
+				} else if (n == 34) {
+					// PC register
+					snprintf(rep, sizeof(rep), "name:pc;bitsize:32;offset:0;encoding:uint;format:hex;set:General Purpose Registers;gcc:34;dwarf:34;generic:pc;");
+					gdb_send_reply(g, rep);
+					break;
+				} else {
+					// Register not available.
+					// By sending back nothing, the debugger knows it has read
+					// all available registers.
+				}
+			} else if (strncmp(cmd, "Rcmd", 4) == 0) { // monitor command
+				char * args = strchr(cmd, ',');
+				if (args != NULL) {
+					args++;
+					while (args != 0x00) {
+						printf("%s",args);
+						if (strncmp(args, "7265736574", 10) == 0) { // reset matched
+							avr->state = cpu_StepDone;
+							avr_reset(avr);
+							args += 10;
+						} else if (strncmp(args, "68616c74", 8) == 0) { // halt matched
+							avr->state = cpu_Stopped;
+							args += 8;
+						} else if (strncmp(args, "20", 2) == 0) { // space matched
+							args += 2;
+						} else // no match - end
+							break;
+					}
+				}
+				gdb_send_reply(g, "OK");
+			}
 			gdb_send_reply(g, "");
 			break;
 		case '?':
@@ -480,11 +516,15 @@ gdb_handle_command(
 					break;
 			}
 		}	break;
+		case 'K': 	// kill
+		case 'D': {	// detach
+			avr->state = cpu_Done;
+			gdb_send_reply(g, "OK");
+		}	break;
 		default:
 			gdb_send_reply(g, "");
 			break;
 	}
-//#endif
 }
 
 static int
@@ -492,7 +532,6 @@ gdb_network_handler(
 		avr_gdb_t * g,
 		uint32_t dosleep )
 {
-//#ifndef _WIN32
 	fd_set read_set;
 	int max;
 	FD_ZERO(&read_set);
@@ -518,8 +557,8 @@ gdb_network_handler(
 			sleep(5);
 			return 1;
 		}
-        int i = 1;
-        setsockopt (g->s, IPPROTO_TCP, TCP_NODELAY, &i, sizeof (i));
+		int i = 1;
+		setsockopt (g->s, IPPROTO_TCP, TCP_NODELAY, &i, sizeof (i));
 		g->avr->state = cpu_Stopped;
 		printf("%s connection opened\n", __FUNCTION__);
 	}
@@ -570,7 +609,6 @@ gdb_network_handler(
 			gdb_handle_command(g, (char*)src);
 		}
 	}
-//#endif
 	return 1;
 }
 
@@ -584,7 +622,6 @@ avr_gdb_handle_watchpoints(
 		uint16_t addr,
 		enum avr_gdb_watch_type type )
 {
-//#ifndef _WIN32
 	avr_gdb_t *g = avr->gdb;
 
 	int i = gdb_watch_find_range(&g->watchpoints, addr);
@@ -596,8 +633,11 @@ avr_gdb_handle_watchpoints(
 	if (kind & type) {
 		/* Send gdb reply (see GDB user manual appendix E.3). */
 		char cmd[78];
+		uint8_t sreg;
+
+		READ_SREG_INTO(g->avr, sreg);
 		sprintf(cmd, "T%02x20:%02x;21:%02x%02x;22:%02x%02x%02x00;%s:%06x;",
-				5, g->avr->data[R_SREG],
+				5, sreg,
 				g->avr->data[R_SPL], g->avr->data[R_SPH],
 				g->avr->pc & 0xff, (g->avr->pc>>8)&0xff, (g->avr->pc>>16)&0xff,
 				kind & AVR_GDB_WATCH_ACCESS ? "awatch" :
@@ -607,7 +647,6 @@ avr_gdb_handle_watchpoints(
 
 		avr->state = cpu_Stopped;
 	}
-//#endif
 }
 
 int
@@ -615,7 +654,6 @@ avr_gdb_processor(
 		avr_t * avr,
 		int sleep )
 {
-//#ifndef _WIN32
 	if (!avr || !avr->gdb)
 		return 0;
 	avr_gdb_t * g = avr->gdb;
@@ -631,8 +669,6 @@ avr_gdb_processor(
 	}
 	// this also sleeps for a bit
 	return gdb_network_handler(g, sleep);
-//#endif
-return 0;
 }
 
 
@@ -640,7 +676,6 @@ int
 avr_gdb_init(
 		avr_t * avr )
 {
-//#ifndef _WIN32
 	if (avr->gdb)
 		return 0; // GDB server already is active
 
@@ -688,7 +723,7 @@ error:
 	if (g->listen >= 0)
 		close(g->listen);
 	free(g);
-//#endif
+
 	return -1;
 }
 
@@ -696,7 +731,6 @@ void
 avr_deinit_gdb(
 		avr_t * avr )
 {
-//#ifndef _WIN32
 	if (!avr->gdb)
 		return;
 	avr->run = avr_callback_run_raw; // restore normal callbacks
@@ -711,5 +745,4 @@ avr_deinit_gdb(
 	avr->gdb = NULL;
 
 	network_release();
-//#endif
 }

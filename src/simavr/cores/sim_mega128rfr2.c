@@ -22,7 +22,6 @@
  */
 
 #include "sim_avr.h"
-#include "sim_core_declare.h"
 #include "avr_eeprom.h"
 #include "avr_flash.h"
 #include "avr_watchdog.h"
@@ -41,6 +40,8 @@ void m128rfr2_reset(struct avr_t * avr);
 #define _AVR_IO_H_
 #define __ASSEMBLER__
 #include "avr/iom128rfr2.h"
+
+#include "sim_core_declare.h"
 
 /*
  * Temporary hack for mangled avr-libc headers
@@ -468,7 +469,7 @@ const struct mcu_t {
 			.vector = TIMER3_CAPT_vect,
 		},
 	},
-	AVR_SPI_DECLARE(PRR0, PRSPI, 'B', 1, 3, 2, 0),
+	AVR_SPI_DECLARE(PRR0, PRSPI),
 	.twi = {
 
 		.r_twcr = TWCR,

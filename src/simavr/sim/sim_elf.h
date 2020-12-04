@@ -82,15 +82,18 @@ typedef struct elf_firmware_t {
 #endif
 } elf_firmware_t ;
 
-//#ifndef _WIN32
-int elf_read_firmware(const char * file, elf_firmware_t * firmware);
-//#endif
-int avr_load_firmware(avr_t * avr, elf_firmware_t * firmware);
+int
+elf_read_firmware(
+	const char * file,
+	elf_firmware_t * firmware);
+
+void
+avr_load_firmware(
+	avr_t * avr,
+	elf_firmware_t * firmware);
 
 #ifdef __cplusplus
 };
 #endif
 
 #endif /*__SIM_ELF_H__*/
-
-

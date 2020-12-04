@@ -124,12 +124,11 @@ _avr_flash_read16le(
 void avr_core_watch_write(avr_t *avr, uint16_t addr, uint8_t v)
 {
 	if (addr > avr->ramend) {
-		AVR_LOG(avr, LOG_ERROR, FONT_RED
-				"CORE: *** Invalid write address "
-				"PC=%04x SP=%04x O=%04x Address %04x=%02x out of ram\n"
-				FONT_DEFAULT,
-				avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc), addr, v);
-		crash(avr);
+		AVR_LOG(avr, LOG_WARNING,
+				"CORE: *** Wrapping write address "
+				"PC=%04x SP=%04x O=%04x v=%02x Address %04x %% %04x --> %04x\n",
+				avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc), v, addr, (avr->ramend + 1), addr % (avr->ramend + 1));
+		addr = addr % (avr->ramend + 1);
 	}
 	if (addr < 32) {
 		AVR_LOG(avr, LOG_ERROR, FONT_RED
@@ -161,12 +160,12 @@ void avr_core_watch_write(avr_t *avr, uint16_t addr, uint8_t v)
 uint8_t avr_core_watch_read(avr_t *avr, uint16_t addr)
 {
 	if (addr > avr->ramend) {
-		AVR_LOG(avr, LOG_ERROR, FONT_RED
-				"CORE: *** Invalid read address "
-				"PC=%04x SP=%04x O=%04x Address %04x out of ram (%04x)\n"
+		AVR_LOG(avr, LOG_WARNING,
+				"CORE: *** Wrapping read address "
+				"PC=%04x SP=%04x O=%04x Address %04x %% %04x --> %04x\n"
 				FONT_DEFAULT,
-				avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc), addr, avr->ramend);
-		crash(avr);
+				avr->pc, _avr_sp_get(avr), _avr_flash_read16le(avr, avr->pc), addr, (avr->ramend + 1), addr % (avr->ramend + 1));
+		addr = addr % (avr->ramend + 1);
 	}
 
 	if (avr->gdb) {
@@ -244,7 +243,7 @@ inline void _avr_sp_set(avr_t * avr, uint16_t sp)
  */
 static inline void _avr_set_ram(avr_t * avr, uint16_t addr, uint8_t v)
 {
-	if (addr < MAX_IOs + 31)
+	if (addr <= avr->ioend)
 		_avr_set_r(avr, addr, v);
 	else
 		avr_core_watch_write(avr, addr, v);
@@ -591,7 +590,7 @@ _avr_flags_znv0s (struct avr_t * avr, uint8_t res)
 
 static inline int _avr_is_instruction_32_bits(avr_t * avr, avr_flashaddr_t pc)
 {
-	uint16_t o = _avr_flash_read16le(avr, pc) & 0xfc0f;
+	uint16_t o = _avr_flash_read16le(avr, pc) & 0xfe0f;
 	return	o == 0x9200 || // STS ! Store Direct to Data Space
 			o == 0x9000 || // LDS Load Direct from Data Space
 			o == 0x940c || // JMP Long Jump
@@ -619,19 +618,31 @@ static inline int _avr_is_instruction_32_bits(avr_t * avr, avr_flashaddr_t pc)
  */
 avr_flashaddr_t avr_run_one(avr_t * avr)
 {
-    //run_one_again:
+run_one_again:
+#if CONFIG_SIMAVR_TRACE
+	/*
+	 * this traces spurious reset or bad jumps
+	 */
+	if ((avr->pc == 0 && avr->cycle > 0) || avr->pc >= avr->codeend || _avr_sp_get(avr) > avr->ramend) {
+//		avr->trace = 1;
+		STATE("RESET\n");
+		crash(avr);
+	}
+	avr->trace_data->touched[0] = avr->trace_data->touched[1] = avr->trace_data->touched[2] = 0;
+#endif
 
-    // Ensure we don't crash simavr due to a bad instruction reading past the end of the flash.
-    if( unlikely(avr->pc >= avr->flashend) )
-    {
-        STATE("CRASH\n");
-        crash(avr);
-        return 0;
-    }
+	/* Ensure we don't crash simavr due to a bad instruction reading past
+	 * the end of the flash.
+	 */
+	if (unlikely(avr->pc >= avr->flashend)) {
+		STATE("CRASH\n");
+		crash(avr);
+		return 0;
+	}
 
-    uint32_t		opcode = _avr_flash_read16le(avr, avr->pc);
-    avr_flashaddr_t	new_pc = avr->pc + 2;	// future "default" pc
-    int 			cycle = 1;
+	uint32_t		opcode = _avr_flash_read16le(avr, avr->pc);
+	avr_flashaddr_t	new_pc = avr->pc + 2;	// future "default" pc
+	int 			cycle = 1;
 
 	switch (opcode & 0xf000) {
 		case 0x0000: {
@@ -1351,6 +1362,13 @@ avr_flashaddr_t avr_run_one(avr_t * avr)
 
 		case 0xf000: {
 			switch (opcode & 0xfe00) {
+				case 0xf100: {	/* simavr special opcodes */
+					if (opcode == 0xf1f1) { // AVR_OVERFLOW_OPCODE
+						printf("FLASH overflow, soft reset\n");
+						new_pc = 0;
+						TRACE_JUMP();
+					}
+				}	break;
 				case 0xf000:
 				case 0xf200:
 				case 0xf400:
@@ -1408,20 +1426,16 @@ avr_flashaddr_t avr_run_one(avr_t * avr)
 		default: _avr_invalid_opcode(avr);
 
 	}
-    avr->cyclesDone = cycle;
-    ////avr->cycle += cycle;
+	avr->cycle += cycle;
 
-    ////
-    /*if( (avr->state == cpu_Running)
-     && (avr->run_cycle_count > cycle)
-     && (avr->interrupt_state == 0))
-    {
-        avr->run_cycle_count -= cycle;
-        avr->pc = new_pc;
-        goto run_one_again;
-    }*/
+	if ((avr->state == cpu_Running) &&
+		(avr->run_cycle_count > cycle) &&
+		(avr->interrupt_state == 0))
+	{
+		avr->run_cycle_count -= cycle;
+		avr->pc = new_pc;
+		goto run_one_again;
+	}
 
-    return new_pc;
+	return new_pc;
 }
-
-

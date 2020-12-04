@@ -264,18 +264,37 @@ avr_vcd_init_input(
 			continue;
 
 		if (!strcmp(keyword, "$timescale")) {
-			double cnt = 0;
-			vcd->vcd_to_us = 1;
+			// sim_vcd header allows only integer factors of us: 1us, 2us, 3us, 10us, 15us, ...
+			uint64_t cnt = 0;
 			char *si = v->argv[1];
+
+			vcd->vcd_to_us = 1;
 			while (si && *si && isdigit(*si))
 				cnt = (cnt * 10) + (*si++ - '0');
-			while (*si == ' ')
+			while (si && *si == ' ')
 				si++;
-			if (!*si)
+			if (si && !*si)
 				si = v->argv[2];
-		//	if (!strcmp(si, "ns")) // TODO: Check that,
-		//		vcd->vcd_to_us = cnt;
-		//	printf("cnt %dus; unit %s\n", (int)cnt, si);
+			if (!strcmp(si, "ns")) {
+				if (cnt%1000==0) {
+					// save for conversion
+					cnt/=1000;
+					vcd->vcd_to_us = cnt;
+				} else {
+					perror("Cannot convert timescale from ns to us without loss of precision");
+					return -1;
+				}
+			} else if (!strcmp(si, "us")) {
+				// no calculation here
+				vcd->vcd_to_us = cnt;
+			} else if (!strcmp(si, "ms")) {
+				cnt*=1000;
+				vcd->vcd_to_us = cnt;
+			} else if (!strcmp(si, "s")) {
+				cnt*=1000000;
+				vcd->vcd_to_us = cnt;
+			}
+			// printf("cnt %dus; unit %s\n", (int)cnt, si);
 		} else if (!strcmp(keyword, "$var")) {
 			const char *name = v->argv[4];
 
@@ -296,7 +315,7 @@ avr_vcd_init_input(
 				vcd->signal[i].alias, vcd->signal[i].name,
 				vcd->signal[i].size);
 		/* format is <four-character ioctl>[_<IRQ index>] */
-		/*if (strlen(vcd->signal[i].name) >= 4) {
+		if (strlen(vcd->signal[i].name) >= 4) {
 			char *dup = strdupa(vcd->signal[i].name);
 			char *ioctl = strsep(&dup, "_");
 			int index = 0;
@@ -318,7 +337,7 @@ avr_vcd_init_input(
 			AVR_LOG(vcd->avr, LOG_WARNING,
 					"%s is an invalid IRQ format\n",
 					vcd->signal[i].name);
-		}*/
+		}
 	}
 	return 0;
 }
@@ -450,8 +469,12 @@ _avr_vcd_notify(
 {
 	avr_vcd_t * vcd = (avr_vcd_t *)param;
 
-	if (!vcd->output)
+	if (!vcd->output) {
+		AVR_LOG(vcd->avr, LOG_WARNING,
+				"%s: no output\n",
+				__FUNCTION__);
 		return;
+	}
 
 	avr_vcd_signal_t * s = (avr_vcd_signal_t*)irq;
 	avr_vcd_log_t l = {
@@ -478,8 +501,12 @@ avr_vcd_add_signal(
 		int signal_bit_size,
 		const char * name )
 {
-	if (vcd->signal_count == AVR_VCD_MAX_SIGNALS)
+	if (vcd->signal_count == AVR_VCD_MAX_SIGNALS) {
+		AVR_LOG(vcd->avr, LOG_ERROR,
+			" %s: unable add signal '%s'\n",
+			__FUNCTION__, name);
 		return -1;
+	}
 	int index = vcd->signal_count++;
 	avr_vcd_signal_t * s = &vcd->signal[index];
 	strncpy(s->name, name, sizeof(s->name));

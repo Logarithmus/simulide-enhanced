@@ -256,14 +256,14 @@ avr_io_setirqs(
 //				printf("%s\n", buf);
 				irq_names[i] = strdup(buf);
 			}
-        }
-        irqs = avr_alloc_irq(&io->avr->irq_pool, 0,
-                        count, irq_names);
-        if (irq_names) {
+		}
+		irqs = avr_alloc_irq(&io->avr->irq_pool, 0,
+						count, irq_names);
+		if (irq_names) {
 			for (int i = 0; i < count; i++)
 				free((char*)irq_names[i]);
 			free((char*)irq_names);
-        }
+		}
 	}
 
 	io->irq = irqs;

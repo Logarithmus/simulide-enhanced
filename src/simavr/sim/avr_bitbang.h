@@ -37,6 +37,7 @@
 			configured frequency (master / slave mode)
 		- 2x 32-bit buffers (input / output) (allows start, stop bits for UART, etc.)
 		- on each read / write a callback is executed to notify the master module
+
 */
 
 
@@ -45,6 +46,8 @@
 
 #include "sim_avr.h"
 #include "avr_ioport.h"
+
+
 
 
 /// SPI Module initialization and state structure
